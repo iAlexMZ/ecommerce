@@ -15,4 +15,9 @@ class OrderController extends Controller
 
         return view('orders.show', compact('order', 'items'));
     }
+
+    public function index()
+    {
+        return view('orders.index');
+    }
 }
