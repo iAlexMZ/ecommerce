@@ -29,6 +29,7 @@ class AddCartItemSize extends Component
             $size = Size::find($value);
             $this->colors = $size->colors;
             $this->options['size'] = $size->name;
+            $this->options['size_id'] = $size->id;
     }
 
     public function updatedColorId($value)
