@@ -37,7 +37,7 @@
                     <i class="fas fa-check-circle"></i>
                 </p>
             </a>
-            <a chref="{{ route('orders.index') . '?status=5' }}" lass="bg-green-500 bg-opacity-75 rounded-lg px-12 pt-8 pb-4">
+            <a chref="{{ route('orders.index') . '?status=5' }}" class="bg-green-500 bg-opacity-75 rounded-lg px-12 pt-8 pb-4">
                 <p class="text-center text-2xl">
                     {{ $ordersByStatus[5] }}
                 </p>
