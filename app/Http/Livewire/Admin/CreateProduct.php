@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
+use Illuminate\Support\Str;
 use App\Models\{Category, Subcategory};
 
 class CreateProduct extends Component
 {
     public $categories, $subcategories = [];
     public $category_id = '', $subcategory_id = '';
+    public $name, $slug, $description;
 
     public function mount()
     {
@@ -19,6 +21,11 @@ class CreateProduct extends Component
     {
         $this->subcategories = Subcategory::where('category_id', $value)->get();
         $this->reset('subcategory_id');
+    }
+
+    public function updatedName($value)
+    {
+        $this->slug = Str::slug($value);
     }
 
     public function render()
