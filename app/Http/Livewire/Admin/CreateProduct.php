@@ -2,14 +2,16 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Brand;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Models\{Category, Subcategory};
+use Illuminate\Database\Eloquent\Builder;
 
 class CreateProduct extends Component
 {
-    public $categories, $subcategories = [];
-    public $category_id = '', $subcategory_id = '';
+    public $categories, $subcategories = [], $brands = [];
+    public $category_id = '', $subcategory_id = '', $brand_id = '';
     public $name, $slug, $description;
 
     public function mount()
@@ -20,7 +22,12 @@ class CreateProduct extends Component
     public function updatedCategoryId($value)
     {
         $this->subcategories = Subcategory::where('category_id', $value)->get();
-        $this->reset('subcategory_id');
+
+        $this->brands = Brand::whereHas('categories', function (Builder $query) use ($value) {
+            $query->where('category_id', $value);
+        })->get();
+
+        $this->reset(['subcategory_id', 'brand_id']);
     }
 
     public function updatedName($value)
