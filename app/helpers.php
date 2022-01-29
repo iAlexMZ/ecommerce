@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Product;
-use App\Models\Size;
+use App\Models\{Product, Size};
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 function quantity($product_id, $color_id = null, $size_id = null)
@@ -54,6 +53,27 @@ function discount($item)
         ]);
     } else {
         $product->quantity = $qty_available;
+        $product->save();
+    }
+}
+
+function increase($item)
+{
+    $product = Product::find($item->id);
+    $quantity = quantity($item->id, $item->options->color_id, $item->options->size_id) + $item->qty;
+    if ($item->options->size_id) {
+        $size = Size::find($item->options->size_id);
+        $size->colors()->detach($item->options->color_id);
+        $size->colors()->attach([
+            $item->options->color_id => ['quantity' => $quantity]
+        ]);
+    } elseif ($item->options->color_id) {
+        $product->colors()->detach($item->options->color_id);
+        $product->colors()->attach([
+            $item->options->color_id => ['quantity' => $quantity]
+        ]);
+    } else {
+        $product->quantity = $quantity;
         $product->save();
     }
 }
