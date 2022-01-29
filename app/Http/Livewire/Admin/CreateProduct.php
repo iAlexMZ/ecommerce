@@ -12,7 +12,17 @@ class CreateProduct extends Component
 {
     public $categories, $subcategories = [], $brands = [];
     public $category_id = '', $subcategory_id = '', $brand_id = '';
-    public $name, $slug, $description, $price;
+    public $name, $slug, $description, $price, $quantity;
+
+    protected $rules = [
+        'category_id' => 'required',
+        'subcategory_id' => 'required',
+        'name' => 'required',
+        'slug' => 'required|unique:products',
+        'description' => 'required',
+        'brand_id' => 'required',
+        'price' => 'required',
+    ];
 
     public function mount()
     {
@@ -44,5 +54,13 @@ class CreateProduct extends Component
     {
         return view('livewire.admin.create-product')
             ->layout('layouts.admin');
+    }
+
+    public function save()
+    {
+        if ($this->subcategory_id && !$this->subcategory->color && !$this->subcategory->size) {
+            $this->rules['quantity'] = 'required';
+        }
+        $this->validate();
     }
 }
