@@ -14,6 +14,7 @@ class ColorProduct extends Component
 
     public $product, $colors;
     public $color_id, $quantity;
+    public $open = false;
 
     public function mount()
     {
