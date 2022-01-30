@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Admin;
 
+use Livewire\Component;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\{Brand, Product, Category, Subcategory};
-use Livewire\Component;
 
 class EditProduct extends Component
 {
@@ -16,6 +17,7 @@ class EditProduct extends Component
         'product.description' => 'required',
         'product.brand_id' => 'required',
         'product.price' => 'required',
+        'product.quantity' => 'numeric',
     ];
 
     public $product, $categories, $subcategories, $brands;
@@ -44,6 +46,11 @@ class EditProduct extends Component
         $this->product->brand_id = '';
     }
 
+    public function updatedProductName($value)
+    {
+        $this->product->slug = Str::slug($value);
+    }
+
     public function getSubcategoryProperty()
     {
         return Subcategory::find($this->product->subcategory_id);
@@ -52,5 +59,17 @@ class EditProduct extends Component
     public function render()
     {
         return view('livewire.admin.edit-product')->layout('layouts.admin');
+    }
+
+    public function save()
+    {
+        $this->rules['product.slug'] = 'required|unique:products,slug,' . $this->product->id;
+        if ($this->product->subcategory_id) {
+            if (!$this->subcategory->color && !$this->subcategory->size) {
+                $this->rules['product.quantity'] = 'required|numeric';
+            }
+        }
+        $this->validate();
+        $this->product->save();
     }
 }
