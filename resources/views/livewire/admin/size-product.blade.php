@@ -77,6 +77,15 @@
                     }
                 })
             })
+
+            Livewire.on('errorSize', mensaje => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: mensaje,
+                }) /* */
+            }); <
+            /scri
         </script>
     @endpush
 </div>
