@@ -13,6 +13,8 @@ class ColorProduct extends Component
         'quantity' => 'required|numeric'
     ];
 
+    protected $listeners = ['delete'];
+
     public $product, $colors;
     public $color_id, $quantity;
     public $open = false;
@@ -21,12 +23,6 @@ class ColorProduct extends Component
     public function mount()
     {
         $this->colors = Color::all();
-    }
-    public function render()
-    {
-        $productColors = $this->product->colors;
-
-        return view('livewire.admin.color-product', compact(('productColors')));
     }
 
     public function save()
@@ -58,5 +54,18 @@ class ColorProduct extends Component
         $this->pivot->save();
         $this->product = $this->product->fresh();
         $this->open = false;
+    }
+
+    public function delete(TbPivot $pivot)
+    {
+        $pivot->delete();
+        $this->product = $this->product->fresh();
+    }
+
+    public function render()
+    {
+        $productColors = $this->product->colors;
+
+        return view('livewire.admin.color-product', compact(('productColors')));
     }
 }
