@@ -19,7 +19,7 @@
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
-    <script src="{{ asset('vendor/ckeditor5/build/ckeditor.js') }}"></script>
+    <script src="{{ asset('vendor/ckeditor5/build/ckeditor5-dll.js') }}"></script>
 
 </head>
 

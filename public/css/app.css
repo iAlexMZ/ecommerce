@@ -1149,6 +1149,9 @@ select {
 .mt-0 {
   margin-top: 0px;
 }
+.mb-8 {
+  margin-bottom: 2rem;
+}
 .mt-12 {
   margin-top: 3rem;
 }
@@ -1160,9 +1163,6 @@ select {
 }
 .mb-5 {
   margin-bottom: 1.25rem;
-}
-.mb-8 {
-  margin-bottom: 2rem;
 }
 .mr-1 {
   margin-right: 0.25rem;
@@ -1311,11 +1311,11 @@ select {
 .max-w-5xl {
   max-width: 64rem;
 }
-.max-w-6xl {
-  max-width: 72rem;
-}
 .max-w-4xl {
   max-width: 56rem;
+}
+.max-w-6xl {
+  max-width: 72rem;
 }
 .flex-1 {
   flex: 1 1 0%;
