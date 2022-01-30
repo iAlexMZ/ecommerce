@@ -30,6 +30,7 @@
                         </x-jet-danger-button>
                     </div>
                 </div>
+                @livewire('admin.color-size', ['size' => $size], key('color-size-' . $size->id))
             </li>
         @endforeach
     </ul>
