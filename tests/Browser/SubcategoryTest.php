@@ -33,10 +33,10 @@ class SubcategoryTest extends DuskTestCase
                 ->pause(500)
                 ->clickLink('Categorías')
                 ->pause(500)
-                ->assertDontSee('TV y audio')
                 ->mouseover('@categories')
                 ->pause(1000)
-                ->assertSee('Celulares y smartphones');
+                ->assertSee('Celulares y smartphones')
+                ->assertDontSee('TV y audio');
         });
     }
 }

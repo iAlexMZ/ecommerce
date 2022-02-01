@@ -181,63 +181,63 @@ class ProductsTest extends DuskTestCase
         });
     }
 
-     /** @test */
-     public function the_products_can_be_filter_by_brand()
-     {
-         $brand = Brand::factory()->create();
+    /** @test */
+    public function the_products_can_be_filter_by_brand()
+    {
+        $brand = Brand::factory()->create();
 
-         $category1 = Category::factory()->create([
-             'name' => 'Celulares y tablets',
-         ]);
+        $category1 = Category::factory()->create([
+            'name' => 'Celulares y tablets',
+        ]);
 
-         $category2 = Category::factory()->create([
-             'name' => 'TV, audio y video',
-         ]);
+        $category2 = Category::factory()->create([
+            'name' => 'TV, audio y video',
+        ]);
 
-         $category1->brands()->attach($brand->id);
-         $category2->brands()->attach($brand->id);
+        $category1->brands()->attach($brand->id);
+        $category2->brands()->attach($brand->id);
 
-         $subcategory1 = Subcategory::factory()->create([
-             'name' => 'Celulares y smartphones',
-             'category_id' => $category1->id,
-         ]);
+        $subcategory1 = Subcategory::factory()->create([
+            'name' => 'Celulares y smartphones',
+            'category_id' => $category1->id,
+        ]);
 
-         $subcategory2 = Subcategory::factory()->create([
-             'name' => 'Accesorios para celulares',
-             'category_id' => $category2->id,
-         ]);
+        $subcategory2 = Subcategory::factory()->create([
+            'name' => 'Accesorios para celulares',
+            'category_id' => $category2->id,
+        ]);
 
-         $product1 = Product::factory()->create([
-             'subcategory_id' => $subcategory1->id,
-         ]);
+        $product1 = Product::factory()->create([
+            'subcategory_id' => $subcategory1->id,
+        ]);
 
-         Image::factory()->create([
-             'imageable_id' => $product1->id,
-             'imageable_type' => Product::class,
-         ]);
+        Image::factory()->create([
+            'imageable_id' => $product1->id,
+            'imageable_type' => Product::class,
+        ]);
 
-         $product2 = Product::factory()->create([
-             'subcategory_id' => $subcategory2->id,
-         ]);
+        $product2 = Product::factory()->create([
+            'subcategory_id' => $subcategory2->id,
+        ]);
 
-         Image::factory()->create([
-             'imageable_id' => $product2->id,
-             'imageable_type' => Product::class,
-         ]);
+        Image::factory()->create([
+            'imageable_id' => $product2->id,
+            'imageable_type' => Product::class,
+        ]);
 
-         $this->browse(function (Browser $browser) use ($category1, $product1, $product2) {
-             $browser->visit('/categories/' . $category1->slug)
-                 ->pause(1000)
-                 ->assertSee(strtoupper($category1->name))
-                 ->assertSee("Subcategorías")
-                 ->click('@brands_filter')
-                 ->assertSee(ucfirst($product1->name))
-                 ->pause(500)
-                 ->assertDontSee(ucfirst($product2->name))
-                 ->pause(500)
-                 ->screenshot('filter_by_brand');
-         });
-     }
+        $this->browse(function (Browser $browser) use ($category1, $product1, $product2) {
+            $browser->visit('/categories/' . $category1->slug)
+                ->pause(1000)
+                ->assertSee(strtoupper($category1->name))
+                ->assertSee("Subcategorías")
+                ->click('@brands_filter')
+                ->assertSee(ucfirst($product1->name))
+                ->pause(500)
+                ->assertDontSee(ucfirst($product2->name))
+                ->pause(500)
+                ->screenshot('filter_by_brand');
+        });
+    }
     /** @test */
     public function it_shows_products_details()
     {
@@ -275,8 +275,8 @@ class ProductsTest extends DuskTestCase
                 ->assertSee($product->price)
                 ->assertSee($product->quantity)
                 ->pause(500)
-                ->assertVisible('@buttom_less')
-                ->assertVisible('@buttom_more')
+                ->assertVisible('@button_less')
+                ->assertVisible('@button_more')
                 ->assertVisible('@add-cart')
                 ->screenshot('product_details');
         });
@@ -295,11 +295,13 @@ class ProductsTest extends DuskTestCase
 
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
+            'color' => false,
+            'size' => false
         ]);
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
-            'quantity' => 15,
+            'quantity' => 5,
         ]);
 
         Image::factory()->create([
@@ -310,9 +312,147 @@ class ProductsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($product) {
             $browser->visit('/products/' . $product->slug)
                 ->pause(1000)
-                ->assertSee(ucfirst($product->name))
-                ->pressAndWaitFor('@buttom_more', 10)
-                ->screenshot('add_more');
+                ->assertSee(ucfirst($product->name));
+            for ($i = 1; $i < $product->quantity; $i++) {
+                $browser->press('@button_more');
+            };
+            $browser->pause(500);
+            $browser->assertButtonDisabled('@button_more');
+            $browser->screenshot('add_more');
+        });
+    }
+
+    /** @test */
+    public function the_button_to_less_more_quantity_of_product_must_be_limited()
+    {
+        $brand = Brand::factory()->create();
+
+        $category = Category::factory()->create([
+            'name' => 'Celulares y tablets',
+        ]);
+
+        $category->brands()->attach($brand->id);
+
+        $subcategory = Subcategory::factory()->create([
+            'category_id' => $category->id,
+            'color' => false,
+            'size' => false
+        ]);
+
+        $product = Product::factory()->create([
+            'subcategory_id' => $subcategory->id,
+            'quantity' => 5,
+        ]);
+
+        Image::factory()->create([
+            'imageable_id' => $product->id,
+            'imageable_type' => Product::class,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->visit('/products/' . $product->slug)
+                ->pause(1000)
+                ->assertSee(ucfirst($product->name));
+            for ($i = $product->quantity; $i > 1; $i--) {
+                $browser->press('@button_less');
+            };
+            $browser->pause(500);
+            $browser->assertButtonDisabled('@button_less');
+            $browser->screenshot('less_more');
+        });
+    }
+
+    /** @test */
+    public function it_shows_the_color_and_size_dropdowns_depending_on_the_selected_product()
+    {
+        $brand = Brand::factory()->create();
+
+        $category1 = Category::factory()->create([
+            'name' => 'Celulares y tablets',
+        ]);
+
+        $category2 = Category::factory()->create([
+            'name' => 'TV, audio y video',
+        ]);
+
+        $category3 = Category::factory()->create([
+            'name' => 'Moda',
+        ]);
+
+        $category1->brands()->attach($brand->id);
+        $category2->brands()->attach($brand->id);
+        $category3->brands()->attach($brand->id);
+
+        $subcategory1 = Subcategory::factory()->create([
+            'category_id' => $category1->id,
+            'color' => true,
+            'size' => false
+        ]);
+
+        $subcategory2 = Subcategory::factory()->create([
+            'category_id' => $category2->id,
+            'color' => false,
+            'size' => false
+        ]);
+
+        $subcategory3 = Subcategory::factory()->create([
+            'category_id' => $category3->id,
+            'color' => true,
+            'size' => true
+        ]);
+
+        $product1 = Product::factory()->create([
+            'subcategory_id' => $subcategory1->id,
+            'quantity' => 5,
+        ]);
+
+        Image::factory()->create([
+            'imageable_id' => $product1->id,
+            'imageable_type' => Product::class,
+        ]);
+
+        $product2 = Product::factory()->create([
+            'subcategory_id' => $subcategory2->id,
+            'quantity' => 5,
+        ]);
+
+        Image::factory()->create([
+            'imageable_id' => $product2->id,
+            'imageable_type' => Product::class,
+        ]);
+
+        $product3 = Product::factory()->create([
+            'subcategory_id' => $subcategory3->id,
+            'quantity' => 5,
+        ]);
+
+        Image::factory()->create([
+            'imageable_id' => $product3->id,
+            'imageable_type' => Product::class,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($product1, $product2, $product3) {
+            $browser->pause(1000);
+            if ($browser->visit('/products/' . $product1->slug)) {
+                $browser->pause(500);
+                $browser->assertPresent('@color');
+                $browser->assertNotPresent('@size');
+                $browser->screenshot('product_with_color');
+            };
+            $browser->pause(1000);
+            if ($browser->visit('/products/' . $product2->slug)) {
+                $browser->pause(500);
+                $browser->assertNotPresent('@color');
+                $browser->assertNotPresent('@size');
+                $browser->screenshot('product_without_color_size');
+            };
+            $browser->pause(1000);
+            if ($browser->visit('/products/' . $product3->slug)) {
+                $browser->pause(500);
+                $browser->assertPresent('@color');
+                $browser->assertPresent('@size');
+                $browser->screenshot('product_with_color_size');
+            };
         });
     }
 }
