@@ -1,10 +1,10 @@
 <header class="bg-trueGray-700 sticky z-50 top-0" style="z-index: 900" x-data="dropdown()">
     <div class="container-menu flex items-center h-16 justify-between md:justify-start">
-        <a :class="{'bg-opacity-100 text-orange-500': open}"
-            x-on:click="show()"
+        <a :class="{'bg-opacity-100 text-orange-500': open}" x-on:click="show()"
             class="flex flex-col items-center justify-center order-last md:order-first px-6 sm:px-4 bg-white bg-opacity-25 text-white cursor-pointer font-semibold h-full">
             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
             </svg>
             <span class="text-sm hidden sm:block">
                 Categorías
@@ -23,8 +23,10 @@
             @auth
                 <x-jet-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                            <img dusk="profile_image" class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                        <button
+                            class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                            <img dusk="profile_image" class="h-8 w-8 rounded-full object-cover"
+                                src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                         </button>
                     </x-slot>
 
@@ -38,15 +40,22 @@
                             {{ __('Profile') }}
                         </x-jet-dropdown-link>
 
+                        <x-jet-dropdown-link href="{{ route('orders.index') }}">
+                            {{ __('My Orders') }}
+                        </x-jet-dropdown-link>
+
+                        <x-jet-dropdown-link href="{{ route('admin.index') }}">
+                            {{ __('Admin') }}
+                           </x-jet-dropdown-link>
+
                         <div class="border-t border-gray-100"></div>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-jet-dropdown-link href="{{ route('logout') }}"
-                                                 onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
+                            <x-jet-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-jet-dropdown-link>
                         </form>
@@ -75,20 +84,19 @@
         </div>
     </div>
 
-    <nav id="navigation-menu"
-         x-show="open"
-         :class="{'block': open, 'hidden': !open}"
-         class="bg-trueGray-700 bg-opacity-25 w-full absolute hidden">
+    <nav id="navigation-menu" x-show="open" :class="{'block': open, 'hidden': !open}"
+        class="bg-trueGray-700 bg-opacity-25 w-full absolute hidden">
         <div class="container-menu h-full hidden sm:block">
             <div x-on:click.away="close()" class="grid grid-cols-4 h-full relative">
                 <ul class="bg-white">
-                    @foreach($categories as $category)
+                    @foreach ($categories as $category)
                         <li class="navigation-link text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                            <a dusk="categories" href="{{ route('categories.show', $category) }}" class="py-2 px-4 text-sm flex items-center">
+                            <a dusk="categories" href="{{ route('categories.show', $category) }}"
+                                class="py-2 px-4 text-sm flex items-center">
                                 <span class="flex justify-center w-9">
                                     {!! $category->icon !!}
                                 </span>
-                               {{ $category->name }}
+                                {{ $category->name }}
                             </a>
 
                             <div class="navigation-submenu bg-gray-100 absolute w-3/4 h-full top-0 right-0 hidden">
@@ -109,9 +117,10 @@
                 @livewire('search')
             </div>
             <ul class="bg-white">
-                @foreach($categories as $category)
+                @foreach ($categories as $category)
                     <li class="text-trueGray-500 hover:bg-orange-500 hover:text-white">
-                        <a href="{{ route('categories.show', $category) }}" class="py-2 px-4 text-sm flex items-center">
+                        <a href="{{ route('categories.show', $category) }}"
+                            class="py-2 px-4 text-sm flex items-center">
                             <span class="flex justify-center w-9">
                                 {!! $category->icon !!}
                             </span>
@@ -126,17 +135,17 @@
             @livewire('cart-movil')
 
             @auth
-                <a href="{{ route('profile.show') }}" class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
+                <a href="{{ route('profile.show') }}"
+                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
                 hover:text-white">
                     <span class="flex justify-center w-9 icon">
                         <i class="far fa-address-card"></i>
                     </span>
                     Perfil
                 </a>
-                <a href=""
-                   onclick="event.preventDefault();
-                   document.getElementById('logout-form').submit()"
-                   class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
+                <a href="" onclick="event.preventDefault();
+                       document.getElementById('logout-form').submit()"
+                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-sign-out-alt"></i>
                     </span>
@@ -146,14 +155,16 @@
                     @csrf
                 </form>
             @else
-                <a href="{{ route('login') }}" class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
+                <a href="{{ route('login') }}"
+                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
                 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-user-circle"></i>
                     </span>
                     Iniciar sesión
                 </a>
-                <a href="{{ route('register') }}" class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
+                <a href="{{ route('register') }}"
+                    class="py-2 px-4 text-sm flex items-center text-trueGray-500 hover:bg-orange-500
                 hover:text-white">
                     <span class="flex justify-center w-9">
                         <i class="fas fa-fingerprint"></i>
