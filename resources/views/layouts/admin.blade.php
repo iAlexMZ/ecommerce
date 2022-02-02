@@ -22,9 +22,9 @@
     <script src="{{ asset('vendor/ckeditor5/build/ckeditor.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert2/dist/sweetalert2.js') }}"></script>
 
-     {{-- Dropzone --}}
-     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    {{-- Dropzone --}}
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 </head>
 
