@@ -1,5 +1,5 @@
 <div class="mt-4">
-    <div class="bg-gray-100 bg-white shadow-lg rounded-lg p-6">
+    <div class="bg-gray-100 shadow-lg rounded-lg p-6">
         <div class="mb-6">
             <x-jet-label>
                 Color
@@ -33,7 +33,6 @@
             </x-jet-button>
         </div>
     </div>
-
     @if ($sizeColors->count())
         <div class="mt-4">
             <table>
@@ -64,7 +63,7 @@
                                     wire:target="edit({{ $color->pivot->id }})">
                                     Actualizar
                                 </x-jet-secondary-button>
-                                <x-jet-danger-button wire:click="$emit('deletePivot', {{ $color->pivot->id }})">
+                                <x-jet-danger-button wire:click="$emit('deleteColorSize', {{ $color->pivot->id }})">
                                     Eliminar
                                 </x-jet-danger-button>
                             </td>
@@ -108,29 +107,4 @@
             </x-jet-button>
         </x-slot>
     </x-jet-dialog-modal>
-
-    @push('scripts')
-        <script>
-            Livewire.on('deletePivot', pivot => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.color-size', 'delete', pivot);
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                })
-            })
-        </script>
-    @endpush
 </div>

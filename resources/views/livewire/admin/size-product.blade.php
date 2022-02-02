@@ -7,7 +7,6 @@
             <x-jet-input wire:model="name" type="text" placeholder="Introduzca una talla" class="w-full" />
             <x-jet-input-error for="name" />
         </div>
-
         <div class="flex justify-end items-center mt-4">
             <x-jet-button wire:click="save" wire:loading.attr="disabled" wire:target="save">
                 Agregar
@@ -55,36 +54,4 @@
             </x-jet-button>
         </x-slot>
     </x-jet-dialog-modal>
-    @push('scripts')
-        <script>
-            Livewire.on('deleteSize', sizeId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) =>
-                Livewire.emitTo('admin.size-product', 'delete', pivot);
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                })
-            })
-
-            Livewire.on('errorSize', mensaje => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: mensaje,
-                }) /* */
-            });
-        </script>
-    @endpush
 </div>

@@ -1,5 +1,5 @@
 <div>
-    <div class="mt-12 bg-white shadow-lg rounded-lg p-6">
+    <div class="my-12 bg-white shadow-lg rounded-lg p-6">
         <div class="mb-6">
             <x-jet-label>
                 Color
@@ -16,7 +16,6 @@
             </div>
             <x-jet-input-error for="color_id" />
         </div>
-
         <div>
             <x-jet-label>
                 Cantidad
@@ -25,7 +24,6 @@
                 class="w-full" />
             <x-jet-input-error for="quantity" />
         </div>
-
         <div class="flex justify-end items-center mt-4">
             <x-jet-action-message class="mr-3" on="saved">
                 Agregado
@@ -35,9 +33,8 @@
             </x-jet-button>
         </div>
     </div>
-
     @if ($productColors->count())
-        <div class="mt-12 bg-white shadow-lg rounded-lg p-6">
+        <div class="bg-white shadow-lg rounded-lg p-6">
             <table>
                 <thead>
                     <tr>
@@ -48,11 +45,9 @@
                             Cantidad
                         </th>
                         <th class="px-4 py-2 w-1/3">
-
                         </th>
                     </tr>
                 </thead>
-
                 <tbody>
                     @foreach ($productColors as $color)
                         <tr wire:key="product_color-{{ $color->pivot->id }}">
@@ -112,29 +107,4 @@
             </x-jet-button>
         </x-slot>
     </x-jet-dialog-modal>
-
-    @push('scripts')
-        <script>
-            Livewire.on('deleteColor', pivot => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Livewire.emitTo('admin.color-product', 'delete', pivot);
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                })
-            })
-        </script>
-    @endpush
 </div>
