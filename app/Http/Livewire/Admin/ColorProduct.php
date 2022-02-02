@@ -3,8 +3,8 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\Color;
-use App\Models\ColorProduct as TbPivot;
 use Livewire\Component;
+use App\Models\ColorProduct as TbPivot;
 
 class ColorProduct extends Component
 {
@@ -13,12 +13,11 @@ class ColorProduct extends Component
         'quantity' => 'required|numeric'
     ];
 
-    protected $listeners = ['delete'];
-
     public $product, $colors;
     public $color_id, $quantity;
     public $open = false;
     public $pivot, $pivot_color_id, $pivot_quantity;
+    protected $listeners = ['delete'];
 
     public function mount()
     {
@@ -29,7 +28,7 @@ class ColorProduct extends Component
     {
         $this->validate();
 
-        $$pivot = TbPivot::where('color_id', $this->color_id)
+        $pivot = TbPivot::where('color_id', $this->color_id)
             ->where('product_id', $this->product->id)
             ->first();
         if ($pivot) {
@@ -42,8 +41,9 @@ class ColorProduct extends Component
                 ]
             ]);
         }
-        
+
         $this->reset(['color_id', 'quantity']);
+
         $this->emit('saved');
 
         $this->product = $this->product->fresh();
@@ -61,8 +61,11 @@ class ColorProduct extends Component
     {
         $this->pivot->color_id = $this->pivot_color_id;
         $this->pivot->quantity = $this->pivot_quantity;
+
         $this->pivot->save();
+
         $this->product = $this->product->fresh();
+
         $this->open = false;
     }
 
@@ -76,6 +79,6 @@ class ColorProduct extends Component
     {
         $productColors = $this->product->colors;
 
-        return view('livewire.admin.color-product', compact(('productColors')));
+        return view('livewire.admin.color-product', compact('productColors'));
     }
 }

@@ -66,9 +66,9 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
+                }).then((result) =>
+                Livewire.emitTo('admin.size-product', 'delete', pivot);
                     if (result.isConfirmed) {
-                        Livewire.emitTo('admin.size-product', 'delete', sizeId);
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',
@@ -84,8 +84,7 @@
                     title: 'Oops...',
                     text: mensaje,
                 }) /* */
-            }); <
-            /scri
+            });
         </script>
     @endpush
 </div>

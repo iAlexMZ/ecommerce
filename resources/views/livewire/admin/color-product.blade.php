@@ -1,42 +1,42 @@
 <div>
-    @if ($productColors->count())
-        <div class="mt-12 bg-white shadow-lg rounded-lg p-6">
-            <div class="mb-6">
-                <x-jet-label>
-                    Color
-                </x-jet-label>
-                <div class="grid grid-cols-6 gap-6">
-                    @foreach ($colors as $color)
-                        <label>
-                            <input type="radio" name="color_id" wire:model.defer="color_id" value="{{ $color->id }}">
-                            <span class="ml-2 text-gray-700 capitalize">
-                                {{ __(ucfirst($color->name)) }}
-                            </span>
-                        </label>
-                    @endforeach
-                </div>
-                <x-jet-input-error for="color_id" />
+    <div class="mt-12 bg-white shadow-lg rounded-lg p-6">
+        <div class="mb-6">
+            <x-jet-label>
+                Color
+            </x-jet-label>
+            <div class="grid grid-cols-6 gap-6">
+                @foreach ($colors as $color)
+                    <label>
+                        <input type="radio" name="color_id" wire:model.defer="color_id" value="{{ $color->id }}">
+                        <span class="ml-2 text-gray-700 capitalize">
+                            {{ __(ucfirst($color->name)) }}
+                        </span>
+                    </label>
+                @endforeach
             </div>
-
-            <div>
-                <x-jet-label>
-                    Cantidad
-                </x-jet-label>
-                <x-jet-input type="number" wire:model.defer="quantity" placeholder="Ingrese una cantidad"
-                    class="w-full" />
-                <x-jet-input-error for="quantity" />
-            </div>
-
-            <div class="flex justify-end items-center mt-4">
-                <x-jet-action-message class="mr-3" on="saved">
-                    Agregado
-                </x-jet-action-message>
-                <x-jet-button wire:loading.attr="disabled" wire:target="save" wire:click="save">
-                    Agregar
-                </x-jet-button>
-            </div>
+            <x-jet-input-error for="color_id" />
         </div>
 
+        <div>
+            <x-jet-label>
+                Cantidad
+            </x-jet-label>
+            <x-jet-input type="number" wire:model.defer="quantity" placeholder="Ingrese una cantidad"
+                class="w-full" />
+            <x-jet-input-error for="quantity" />
+        </div>
+
+        <div class="flex justify-end items-center mt-4">
+            <x-jet-action-message class="mr-3" on="saved">
+                Agregado
+            </x-jet-action-message>
+            <x-jet-button wire:loading.attr="disabled" wire:target="save" wire:click="save">
+                Agregar
+            </x-jet-button>
+        </div>
+    </div>
+
+    @if ($productColors->count())
         <div class="mt-12 bg-white shadow-lg rounded-lg p-6">
             <table>
                 <thead>
@@ -68,7 +68,7 @@
                                     wire:target="edit({{ $color->pivot->id }})">
                                     Actualizar
                                 </x-jet-secondary-button>
-                                <x-jet-danger-button wire:click="$emit('deletePivot', {{ $color->pivot->id }})">
+                                <x-jet-danger-button wire:click="$emit('deleteColor', {{ $color->pivot->id }})">
                                     Eliminar
                                 </x-jet-danger-button>
                             </td>
@@ -115,7 +115,7 @@
 
     @push('scripts')
         <script>
-            Livewire.on('deletePivot', pivot => {
+            Livewire.on('deleteColor', pivot => {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -125,8 +125,8 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
-                    Livewire.emitTo('admin.color-product', 'delete', pivot);
                     if (result.isConfirmed) {
+                        Livewire.emitTo('admin.color-product', 'delete', pivot);
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',
