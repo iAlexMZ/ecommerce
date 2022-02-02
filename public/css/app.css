@@ -1180,6 +1180,9 @@ select {
 .mt-0 {
   margin-top: 0px;
 }
+.mr-6 {
+  margin-right: 1.5rem;
+}
 .block {
   display: block;
 }
