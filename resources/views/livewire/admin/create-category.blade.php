@@ -160,7 +160,7 @@
                     Imagen
                 </x-jet-label>
                 <input wire:model="editImage" accept="image/*" type="file" class="mt-1" name=""
-                    id="{{ $image }}">
+                    id="{{ $image2 }}">
                 <x-jet-input-error for="editImage" />
             </div>
         </x-slot>
