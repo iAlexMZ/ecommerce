@@ -82,7 +82,7 @@
                     @foreach ($categories as $category)
                         <tr>
                             <td class="py-2">
-                                <span class="inline-block w-8 text-center mr-2">
+                                <span class="inline-block w-8 text-center mr-2">º
                                     {!! $category->icon !!}
                                 </span>
                                 <span class="uppercase">
@@ -91,15 +91,75 @@
                             </td>
                             <td class="py-2">
                                 <div class="flex divide-x divide-gray-300 font-semibold">
-                                    <a class="pr-2 hover:text-blue-600 cursor-pointer">Editar</a>
+                                    <a class="pr-2 hover:text-blue-600 cursor-pointer"
+                                        wire:click="edit('{{ $category->slug }}')">Editar</a>
                                     <a class="pl-2 hover:text-red-600 cursor-pointer"
                                         wire:click="$emit('deleteCategory', '{{ $category->slug }}')">Eliminar</a>
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </x-slot>
     </x-jet-action-section>
+
+    <x-jet-dialog-modal wire:model="editForm.open">
+        <x-slot name="title">
+            Editar categoría
+        </x-slot>
+        <x-slot name="content">
+            <div class="space-y-3">
+                <div>
+                    <x-jet-label>
+                        Nombre
+                    </x-jet-label>
+                    <x-jet-input wire:model="editForm.name" type="text" class="w-full mt-1" />
+                    <x-jet-input-error for="editForm.name" />
+                </div>
+                <div>
+                    <x-jet-label>
+                        Slug
+                    </x-jet-label>
+                    <x-jet-input disabled wire:model="editForm.slug" type="text" class="w-full mt-1 bg-gray-100" />
+                    <x-jet-input-error for="editForm.slug" />
+                </div>
+                <div>
+                    <x-jet-label>
+                        Icono
+                    </x-jet-label>
+                    <x-jet-input wire:model.defer="editForm.icon" type="text" class="w-full mt-1" />
+                    <x-jet-input-error for="editForm.icon" />
+                </div>
+                <div>
+                    <x-jet-label>
+                        Marcas
+                    </x-jet-label>
+                    <div class="grid grid-cols-4">
+                        @foreach ($brands as $brand)
+                            <x-jet-label>
+                                <x-jet-checkbox wire:model.defer="editForm.brands" name="brands[]"
+                                    value="{{ $brand->id }}" />
+                                {{ $brand->name }}
+                            </x-jet-label>
+                        @endforeach
+                    </div>
+                    <x-jet-input-error for="editForm.brands" />
+                </div>
+                <div>
+                    <x-jet-label>
+                        Imagen
+                    </x-jet-label>
+                    <input wire:model="editForm.image" accept="image/*" type="file" class="mt-1" name=""
+                        id="{{ $image }}">
+                    <x-jet-input-error for="editForm.image" />
+                </div>
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            …
+        </x-slot>
+    </x-jet-dialog-modal>
+
 </div>
