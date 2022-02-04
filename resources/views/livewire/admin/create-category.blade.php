@@ -112,54 +112,64 @@
         <x-slot name="content">
             <div class="space-y-3">
                 <div>
-                    <x-jet-label>
-                        Nombre
-                    </x-jet-label>
-                    <x-jet-input wire:model="editForm.name" type="text" class="w-full mt-1" />
-                    <x-jet-input-error for="editForm.name" />
+                    @if ($editImage)
+                        <img class="w-full h-64 object-cover object-center" src="{{ $editImage->temporaryUrl() }}"
+                            alt="">
+                    @else
+                        <img class="w-full h-64 object-cover object-center"
+                            src="{{ Storage::url($editForm['image']) }}" alt="">
+                    @endif
                 </div>
-                <div>
-                    <x-jet-label>
-                        Slug
-                    </x-jet-label>
-                    <x-jet-input disabled wire:model="editForm.slug" type="text" class="w-full mt-1 bg-gray-100" />
-                    <x-jet-input-error for="editForm.slug" />
+                <x-jet-label>
+                    Nombre
+                </x-jet-label>
+                <x-jet-input wire:model="editForm.name" type="text" class="w-full mt-1" />
+                <x-jet-input-error for="editForm.name" />
+            </div>
+            <div>
+                <x-jet-label>
+                    Slug
+                </x-jet-label>
+                <x-jet-input disabled wire:model="editForm.slug" type="text" class="w-full mt-1 bg-gray-100" />
+                <x-jet-input-error for="editForm.slug" />
+            </div>
+            <div>
+                <x-jet-label>
+                    Icono
+                </x-jet-label>
+                <x-jet-input wire:model.defer="editForm.icon" type="text" class="w-full mt-1" />
+                <x-jet-input-error for="editForm.icon" />
+            </div>
+            <div>
+                <x-jet-label>
+                    Marcas
+                </x-jet-label>
+                <div class="grid grid-cols-4">
+                    @foreach ($brands as $brand)
+                        <x-jet-label>
+                            <x-jet-checkbox wire:model.defer="editForm.brands" name="brands[]"
+                                value="{{ $brand->id }}" />
+                            {{ $brand->name }}
+                        </x-jet-label>
+                    @endforeach
                 </div>
-                <div>
-                    <x-jet-label>
-                        Icono
-                    </x-jet-label>
-                    <x-jet-input wire:model.defer="editForm.icon" type="text" class="w-full mt-1" />
-                    <x-jet-input-error for="editForm.icon" />
-                </div>
-                <div>
-                    <x-jet-label>
-                        Marcas
-                    </x-jet-label>
-                    <div class="grid grid-cols-4">
-                        @foreach ($brands as $brand)
-                            <x-jet-label>
-                                <x-jet-checkbox wire:model.defer="editForm.brands" name="brands[]"
-                                    value="{{ $brand->id }}" />
-                                {{ $brand->name }}
-                            </x-jet-label>
-                        @endforeach
-                    </div>
-                    <x-jet-input-error for="editForm.brands" />
-                </div>
-                <div>
-                    <x-jet-label>
-                        Imagen
-                    </x-jet-label>
-                    <input wire:model="editForm.image" accept="image/*" type="file" class="mt-1" name=""
-                        id="{{ $image }}">
-                    <x-jet-input-error for="editForm.image" />
-                </div>
+                <x-jet-input-error for="editForm.brands" />
+            </div>
+            <div>
+                <x-jet-label>
+                    Imagen
+                </x-jet-label>
+                <input wire:model="editImage" accept="image/*" type="file" class="mt-1" name=""
+                    id="{{ $image }}">
+                <x-jet-input-error for="editImage" />
             </div>
         </x-slot>
         <x-slot name="footer">
-            …
+            <x-jet-danger-button wire:loading.attr="disabled" wire:target="editImage">
+                Actualizar
+            </x-jet-danger-button>
         </x-slot>
-    </x-jet-dialog-modal>
+</div>
+</x-jet-dialog-modal>
 
 </div>

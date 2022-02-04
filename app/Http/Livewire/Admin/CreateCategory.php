@@ -48,7 +48,9 @@ class CreateCategory extends Component
     ];
 
 
-    public $brands, $category, $categories, $image, $editImage;
+    public $brands, $category, $categories, $image;
+
+    public $editImage;
 
     public function mount()
     {
@@ -95,6 +97,8 @@ class CreateCategory extends Component
 
     public function edit(Category $category)
     {
+        $this->image = rand();
+        $this->reset(['editImage']);
         $this->category = $category;
 
         $this->editForm['open'] = true;
