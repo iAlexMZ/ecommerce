@@ -4,11 +4,22 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Brand;
 use Livewire\Component;
+use App\Models\Category;
 use Illuminate\Support\Str;
-use WithFileUploads;
+use Livewire\WithFileUploads;
 
 class CreateCategory extends Component
 {
+    use WithFileUploads;
+
+    public $createForm = [
+        'name' => null,
+        'slug' => null,
+        'icon' => null,
+        'image' => null,
+        'brands' => [],
+    ];
+
     protected $rules = [
         'createForm.name' => 'required',
         'createForm.slug' => 'required|unique:categories,slug',
@@ -25,19 +36,13 @@ class CreateCategory extends Component
         'createForm.brands' => 'marcas',
     ];
 
-    public $createForm = [
-        'name' => null,
-        'slug' => null,
-        'icon' => null,
-        'image' => null,
-        'brands' => [],
-    ];
 
-    public $brands;
+    public $brands, $image;
 
     public function mount()
     {
         $this->getBrands();
+        $this->image = 1;
     }
 
     public function getBrands()
@@ -53,6 +58,19 @@ class CreateCategory extends Component
     public function save()
     {
         $this->validate();
+
+        $image = $this->createForm['image']->store('categories', 'public');
+
+        $category = Category::create([
+            'name' => $this->createForm['name'],
+            'slug' => $this->createForm['slug'],
+            'icon' => $this->createForm['icon'],
+            'image' => $image
+        ]);
+        $category->brands()->attach($this->createForm['brands']);
+
+        $this->image = 2;
+        $this->reset('createForm');
     }
 
     public function render()
