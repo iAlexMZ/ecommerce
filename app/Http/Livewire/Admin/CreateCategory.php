@@ -12,6 +12,8 @@ class CreateCategory extends Component
 {
     use WithFileUploads;
 
+    public $listeners = ['delete'];
+
     public $createForm = [
         'name' => null,
         'slug' => null,
@@ -80,6 +82,13 @@ class CreateCategory extends Component
 
         $this->getCategories();
         $this->emit('saved');
+    }
+
+    public function delete(Category $category)
+    {
+        $category->brands()->detach();
+        $category->delete();
+        $this->getCategories();
     }
 
     public function render()
