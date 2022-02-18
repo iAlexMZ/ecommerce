@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
 use App\Models\{Brand, Image, Product, Category, Subcategory};
+use App\Models\User;
 
 class CartTest extends TestCase
 {
@@ -210,7 +211,25 @@ class CartTest extends TestCase
             ->assertDontSee($product->name);
     }
 
+    /** @test */
+    public function shopping_cart_is_save_when_logout()
+    {
+        $product = $this->createProduct(false, false);
+        $user = User::factory()->create();
+        $this->actingAs($this->$user);
 
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product);
+
+        Livewire::test(ShoppingCart::class)
+            ->assertViewIs('livewire.shopping-cart')
+            ->assertSee($product->name)
+            ->emit('event', 'Logout');
+
+        $this->assertDatabaseHas('shoppingcart', [
+            'identifier' => 1
+        ]);
+    }
 
 
 

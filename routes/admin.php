@@ -1,4 +1,5 @@
 <?php
+namespace App;
 
 use App\Http\Livewire\Admin\ShowCity;
 use Illuminate\Support\Facades\Route;
@@ -6,6 +7,7 @@ use App\Http\Livewire\Admin\EditProduct;
 use App\Http\Livewire\Admin\ShowCategory;
 use App\Http\Livewire\Admin\ShowProducts;
 use App\Http\Livewire\Admin\CreateProduct;
+use App\Http\Livewire\Admin\ShowProducts2;
 use App\Http\Livewire\Admin\UserComponent;
 use App\Http\Livewire\Admin\BrandComponent;
 use App\Http\Livewire\Admin\ShowDepartment;
@@ -16,6 +18,7 @@ use App\Http\Controllers\Admin\CategoryController;
 
 
 Route::get('/', ShowProducts::class)->name('admin.index');
+Route::get('all', ShowProducts2::class)->name('admin.all.index');
 
 Route::get('products/{product}/edit', EditProduct::class)->name('admin.products.edit');
 
