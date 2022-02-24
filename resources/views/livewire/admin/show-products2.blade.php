@@ -14,6 +14,13 @@
         <div class="px-6 py-4">
             <x-jet-input class="w-full" wire:model="search" type="text"
                 placeholder="Introduzca el nombre del producto a buscar" />
+
+            <select class="mt-3 rounded-md" wire:model="pagination">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
         </div>
 
         @if ($products->count())
@@ -44,9 +51,10 @@
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Marcas
                         </th>
+
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Descripción
+                            Stock
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -62,15 +70,7 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Stock Colores
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Tallas
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Stock Tallas
                         </th>
                         <th scope="col" class="relative px-6 py-3">
                             <span class="sr-only">Editar</span>
@@ -119,9 +119,21 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    {{ $product->description }}
-                                </div>
+                                @if (is_null($product->quantity))
+                                    @if ($product->colors->count())
+                                        <div class="text-sm text-gray-900">
+                                            {{ array_sum($product->colors->pluck('pivot')->pluck('quantity')->all()) }}
+                                        </div>
+                                    @else
+                                        <div class="text-sm text-gray-900">
+                                            {{ array_sum($product->sizes->pluck('colors')->collapse()->pluck('pivot')->pluck('quantity')->all()) }}
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="text-sm text-gray-900">
+                                        {{ $product->quantity }}
+                                    </div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">
@@ -134,14 +146,19 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                               {{-- @if ($product->subcategory->color)
-                                    @foreach ($colors as $color)
-                                        <option value="{{ $color->id }}">{{ __(ucfirst($color->name)) }}
-                                        </option>
-                                    @endforeach
-                                @else
-                                       <p class="text-indigo-600 hover:text-indigo-900">No tiene colores</p>
-                                @endif --}}
+                                @if ($product->sizes)
+                                    <div class="text-sm text-gray-900">
+                                        {{ implode(', ',array_unique($product->sizes->pluck('colors')->collapse()->pluck('name')->all())) }}
+                                    </div>
+                                @endif
+                                @if ($product->colors)
+                                    <div class="text-sm text-gray-900">
+                                        {{ implode(', ', $product->colors->pluck('name')->all()) }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <p>{{ implode($product->sizes->pluck('name')->all(), ', ') }}</p>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <a href="{{ route('admin.products.edit', $product) }}"
