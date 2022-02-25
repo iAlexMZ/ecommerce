@@ -2,40 +2,48 @@
 
 namespace Tests\Browser;
 
-use App\Models\Brand;
-use App\Models\Image;
-use App\Models\Product;
-use Tests\DuskTestCase;
-use App\Models\Category;
-use Laravel\Dusk\Browser;
-use App\Models\Subcategory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\{Brand, Category, Subcategory, Image, Product, User};
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
-class CartTest extends DuskTestCase
+class PaymentOrderTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
     /** @test */
-    public function when_the_users_not_registered_try_to_make_a_order_they_redirect_to_login_page()
+    public function the_user_can_choose_the_shipping_option()
     {
         $product = $this->createProduct();
+        $user = User::factory()->create();
 
-        $this->browse(function (Browser $browser) use ($product) {
-            $browser->visit('/products/' . $product->slug)
-                ->pause(3000)
+        $this->browse(function (Browser $browser) use ($product, $user) {
+            $browser->visit('/login')
+                ->pause(1000)
+                ->type('email', $user->email)
+                ->type('password', 'password')
+                ->press('INICIAR SESIÓN')
+                ->assertPathIs('/')
+                ->click('@product')
                 ->press('AGREGAR AL CARRITO DE COMPRAS')
+                ->pause(1000)
                 ->visit('/shopping-cart')
                 ->assertSee($product->name)
                 ->click('@continue')
-                ->assertPathIs('/login')
-                ->screenshot('cart');
+                ->pause(1000)
+                ->visit('/orders/create')
+                ->click('@shop')
+                ->screenshot('picked-up-at-the-store')
+                ->click('@home')
+                ->pause(1000)
+                ->assertSee('Departamento')
+                ->assertSee('Ciudad')
+                ->assertSee('Distrito')
+                ->assertSee('Dirección')
+                ->assertSee('Referencia')
+                ->screenshot('home-delivery');
         });
     }
-
-
-
-
-
 
 
 

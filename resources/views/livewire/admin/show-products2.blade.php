@@ -1,12 +1,11 @@
 <div>
     <x-slot name="header">
-        <div class="flex items-center">
-            <h2 class="font-semibold text-xl text-gray-600 leading-right">
-                Lista de productos
-            </h2>
-            <x-button-link class="ml-auto" href="{{ route('admin.products.create') }}">
+        <div class="flex items-center border-b-2">
+            <h2 class="font-semibold text-3xl text-gray-600 leading-right mx-auto">
+                Listado completo de productos
+            </h2>{{-- <x-button-link class="ml-auto" href="{{ route('admin.products.create') }}">
                 Agregar producto
-            </x-button-link>
+            </x-button-link> --}}
         </div>
     </x-slot>
 

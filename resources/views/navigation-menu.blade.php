@@ -14,7 +14,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('admin.all.index') }}" :active="request()->routeIs('admin.all.index')">
-                        Todo
+                        Detalles
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('admin.index') }}" :active="request()->routeIs('admin.index')">
@@ -184,7 +184,7 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-jet-responsive-nav-link href="{{ route('admin.all.index') }}" :active="request()->routeIs('admin.all.index')">
-                Todo
+                Detalles
             </x-jet-responsive-nav-link>
 
             <x-jet-responsive-nav-link href="{{ route('admin.index') }}" :active="request()->routeIs('admin.index')">

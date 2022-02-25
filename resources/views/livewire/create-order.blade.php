@@ -20,13 +20,13 @@
         </div>
         <div x-data="{ envio_type: @entangle('envio_type') }">
             <p class="mt-6 mb-3 text-lg text-gray-700 font-semibold">Envíos</p>
-            <label class="bg-white rounded-lg shadow px-6 py-4 flex items-center mb-4">
+            <label dusk="shop" class="bg-white rounded-lg shadow px-6 py-4 flex items-center mb-4">
                 <input x-model="envio_type" type="radio" name="envio_type" value="1" class="text-gray-600">
                 <span class="ml-2 text-gray-700">Recojo en tienda (Calle Falsa 123)</span>
                 <span class="font-semibold text-gray-700 ml-auto">Gratis</span>
             </label>
             <div class="bg-white rounded-lg shadow">
-                <label class="px-6 py-4 flex items-center">
+                <label dusk="home" class="px-6 py-4 flex items-center">
                     <input x-model="envio_type" type="radio" name="envio_type" value="2" class="text-gray-600">
                     <span class="ml-2 text-gray-700">Envío a domicilio</span>
                 </label>
