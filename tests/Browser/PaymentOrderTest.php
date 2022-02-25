@@ -36,15 +36,10 @@ class PaymentOrderTest extends DuskTestCase
                 ->screenshot('picked-up-at-the-store')
                 ->click('@home')
                 ->pause(1000)
-                ->assertSee('Departamento')
-                ->assertSee('Ciudad')
-                ->assertSee('Distrito')
-                ->assertSee('Dirección')
-                ->assertSee('Referencia')
+                ->assertSee('Departamento', 'Ciudad', 'Distrito', 'Dirección', 'Referencia')
                 ->screenshot('home-delivery');
         });
     }
-
 
 
     public function createProduct($color = false, $size = false, $quantity = 10)
