@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\CategoryController;
 
 
 Route::get('/', ShowProducts::class)->name('admin.index');
-Route::get('all', ShowProducts2::class)->name('admin.all.index');
+Route::get('details', ShowProducts2::class)->name('admin.details.index');
 
 Route::get('products/{product}/edit', EditProduct::class)->name('admin.products.edit');
 

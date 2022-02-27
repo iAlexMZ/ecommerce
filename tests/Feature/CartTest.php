@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Livewire\Livewire;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
 use App\Models\{Brand, Image, Product, Category, Subcategory};
@@ -214,21 +213,19 @@ class CartTest extends TestCase
     /** @test */
     public function shopping_cart_is_save_when_logout()
     {
-        $product = $this->createProduct(false, false);
         $user = User::factory()->create();
-        $this->actingAs($this->$user);
+        $this->actingAs($user);
+
+        $product = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product);
 
-        Livewire::test(ShoppingCart::class)
-            ->assertViewIs('livewire.shopping-cart')
-            ->assertSee($product->name)
-            ->emit('event', 'Logout');
+        $data = Cart::content();
 
-        $this->assertDatabaseHas('shoppingcart', [
-            'identifier' => 1
-        ]);
+        $this->post('/logout');
+
+        $this->assertDatabaseHas('shoppingcart', ['content' => serialize($data)]);
     }
 
 

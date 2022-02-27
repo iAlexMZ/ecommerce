@@ -1,23 +1,25 @@
 <div>
     <x-slot name="header">
-        <div class="flex items-center border-b-2">
-            <h2 class="font-semibold text-3xl text-gray-600 leading-right mx-auto">
-                Listado completo de productos
-            </h2>{{-- <x-button-link class="ml-auto" href="{{ route('admin.products.create') }}">
+        <div class="flex items-center">
+            <h2 class="font-semibold text-xl text-gray-600 leading-right">
+                Detalles de un completos de un producto
+            </h2>
+            <x-button-link class="ml-auto" href="{{ route('admin.products.create') }}">
                 Agregar producto
-            </x-button-link> --}}
+            </x-button-link>
         </div>
     </x-slot>
 
     <x-table-responsive>
-        <div class="mt-7 ml-6 mb-0">
-            <div @click.away="dropdownMenu = false" x-data="{dropdownMenu: false}" class="relative inline-block">
-                <button color="yellow" @click="dropdownMenu = !dropdownMenu"
-                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2">
+        <div class="mt-5 ml-6">
+            <div @click.away="dropdownPagination = false" x-data="{dropdownPagination: false}"
+                class="relative inline-block mb-0">
+                <x-button-link @click="dropdownPagination = !dropdownPagination">
                     <i class="fa-solid fa-book-open"></i>
                     <span class="ml-1">Paginación</span>
-                </button>
-                <select x-show="dropdownMenu" class="absolute left-0 mt-12 bg-gray-100 rounded-md shadow-xl" wire:model="pagination">
+                </x-button-link>
+                <select x-show="dropdownPagination" class="w-7/12 absolute left-0 mt-12 bg-gray-100 rounded-md shadow-xl"
+                    wire:model="pagination">
                     <option value="" selected disabled>Productos a mostrar</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
@@ -26,26 +28,28 @@
                 </select>
             </div>
 
-            <div @click.away="dropdownMenu = false" x-data="{dropdownMenu: false}" class="relative inline-block">
-                <button color="yellow" @click="dropdownMenu = !dropdownMenu"
-                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2">
+            <div @click.away="dropdownColumns = false" x-data="{dropdownColumns: false}" class="relative inline-block">
+                <x-button-link @click="dropdownColumns = !dropdownColumns">
                     <i class="fa-solid fa-table-columns"></i>
                     <span class="ml-1">Columnas</span>
-                </button>
-                <div x-show="dropdownMenu" class="absolute left-0 w-40 mt-2 bg-gray-100 rounded-md shadow-xl">
-                    <spam href="#" class="block px-4 py-2 text-sm">
+                </x-button-link>
+                <div x-show="dropdownColumns" class="absolute left-0 w-40 mt-2 bg-gray-100 rounded-md shadow-xl">
+                    <span href="#" class="block px-4 py-2 text-sm">
                         @foreach ($columns as $column)
                             <input type="checkbox" wire:model="selectedColumns" value="{{ $column }}">
                             <label>{{ $column }}</label>
                             <br />
                         @endforeach
-                    </spam>
+                    </span>
                 </div>
             </div>
         </div>
-        <div class="px-6 py-4">
-            <x-jet-input class="w-full" wire:model="search" type="text"
+        <div class="px-6 py-4 mt-0">
+            <x-jet-input class="w-1/2" wire:model="search" type="text"
                 placeholder="Introduzca el nombre del producto a buscar" />
+            <x-button-link wire:click="clear" class="h-10">
+                <span class="fa fa-eraser"></span>
+            </x-button-link>
 
             @if ($products->count())
                 <table class="min-w-full divide-y divide-gray-200">
@@ -55,6 +59,9 @@
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Nombre
+                                    <button wire:click="sortable('name')">
+                                        <span class="fa fa{{ $camp === 'name' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Categoría'))
@@ -67,42 +74,64 @@
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Estado
+                                    <button wire:click="sortable('status')">
+                                        <span class="fa fa{{ $camp === 'status' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Precio'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Precio
+                                    <button wire:click="sortable('price')">
+                                        <span class="fa fa{{ $camp === 'price' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Subcategoría'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Subcategorías
+                                    <button wire:click="sortable('subcategory_id')">
+                                        <span
+                                            class="fa fa{{ $camp === 'subcategory_id' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Marca'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Marcas
+                                    <button wire:click="sortable('brand_id')">
+                                        <span class="fa fa{{ $camp === 'brand_id' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Stock'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Stock
+                                    <button wire:click="sortable('quantity')">
+                                        <span class="fa fa{{ $camp === 'quantity' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Fecha Creación'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Fecha de Creación
+                                    <button wire:click="sortable('created_at')">
+                                        <span class="fa fa{{ $camp === 'created_at' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Fecha Edición'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Fecha de Actualización
+                                    <button wire:click="sortable('updated_at')">
+                                        <span class="fa fa{{ $camp === 'updated_at' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Colores'))
