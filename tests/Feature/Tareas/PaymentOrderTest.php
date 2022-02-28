@@ -1,20 +1,19 @@
 <?php
 
-namespace Tests\Browser;
+namespace Tests\Feature\Tareas;
 
+use Tests\TestCase;
 use App\Models\User;
-use App\Models\Brand;
-use App\Models\Image;
-use App\Models\Product;
-use Tests\DuskTestCase;
-use App\Models\Category;
-use Laravel\Dusk\Browser;
-use App\Models\Subcategory;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Livewire\Livewire;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\{Brand, Category, Subcategory, Image, Order, Product};
+use App\Http\Livewire\{AddCartItem, CreateOrder, ShoppingCart, PaymentOrder};
+use Gloudemans\Shoppingcart\Facades\Cart;
 
-class CartTest extends DuskTestCase
+class PaymentOrderTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
 
     public function createProduct($color = false, $size = false, $quantity = 10)

@@ -1,21 +1,33 @@
 <?php
 
-namespace Tests\Browser;
+namespace Tests\Feature\Tareas;
 
-use App\Models\User;
-use App\Models\Brand;
-use App\Models\Image;
-use App\Models\Product;
-use Tests\DuskTestCase;
-use App\Models\Category;
-use Laravel\Dusk\Browser;
-use App\Models\Subcategory;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
+use Livewire\Livewire;
+use App\Http\Livewire\Search;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\{Brand, Image, Product, Category, Subcategory};
 
-class CartTest extends DuskTestCase
+class SearchTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
+    /** @test */
+    public function can_be_filter_by_name()
+    {
+        $product1 = $this->createProduct();
+        $product2 = $this->createProduct();
+
+        Livewire::test(Search::class)
+            ->assertSet('search', $product1->name)
+            ->assertSee($product1->name)
+            ->assertDontSee($product2->name);
+
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 
     public function createProduct($color = false, $size = false, $quantity = 10)
     {

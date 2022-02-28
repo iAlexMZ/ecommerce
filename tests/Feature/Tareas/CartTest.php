@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
 use Livewire\Livewire;
@@ -85,33 +85,6 @@ class CartTest extends TestCase
             ->assertStatus(200);
 
         $this->assertEquals(Cart::content()->first()->id, 1);
-    }
-
-    /** @test */
-    public function is_not_possible_to_add_more_products_that_the_stock_is_0()
-    {
-        $quantity = 4;
-        $product = $this->createProduct(false, false, $quantity);
-
-        for ($i = 0; $i < $quantity; $i++) {
-            Livewire::test(AddCartItem::class, ['product' => $product])
-                ->call('addItem', $product);
-            $product->quantity = qty_available($product->id);
-        }
-
-        $this->assertEquals($quantity, Cart::content()->first()->qty);
-    }
-
-    /** @test */
-    public function it_shows_the_product_stock()
-    {
-        $product1 = $this->createProduct(false, false, 10);
-        $product2 = $this->createProduct(false, false, 0);
-
-        $this->get('products/' . $product1->slug)
-            ->assertStatus(200)
-            ->assertSeeText('Stock disponible: ' . $product1->quantity)
-            ->assertDontSeeText('Stock disponible: ' . $product2->quantity);
     }
 
     /** @test */
@@ -221,13 +194,10 @@ class CartTest extends TestCase
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product);
 
-        $data = Cart::content();
-
         $this->post('/logout');
 
-        $this->assertDatabaseHas('shoppingcart', ['content' => serialize($data)]);
+        $this->assertDatabaseHas('shoppingcart', ['identifier' => 1]);
     }
-
 
 
 

@@ -2,10 +2,12 @@
 
 namespace Tests\Browser;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Models\{Brand, Category, Subcategory, Image, Product, User};
-use Laravel\Dusk\Browser;
+use Livewire\Livewire;
 use Tests\DuskTestCase;
+use Laravel\Dusk\Browser;
+use App\Http\Livewire\AddCartItem;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\{Brand, Category, City, Department, District, Subcategory, Image, Product, User};
 
 class PaymentOrderTest extends DuskTestCase
 {
@@ -41,6 +43,45 @@ class PaymentOrderTest extends DuskTestCase
         });
     }
 
+    /** @test */
+    public function chained_selections_load_correctly()
+    {
+        $department = Department::factory()->create();
+
+        $city = City::factory()->create([
+            'department_id' => $department->id,
+        ]);
+
+        $district = District::factory()->create([
+            'city_id' => $city->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($department, $city, $district) {
+            $product = $this->createProduct();
+
+            $browser->loginAs(User::factory()->create())
+                ->visit('/products/' . $product->slug)
+                ->press('AGREGAR AL CARRITO DE COMPRAS')
+                ->visit('/orders/create')
+                ->check('@home')
+                ->click('@department')
+                ->pause(500)
+                ->click('@option-department')
+                ->assertSee($department->name)
+                ->screenshot('select-department')
+                ->click('@city')
+                ->pause(500)
+                ->click('@option-city')
+                ->assertSee($city->name)
+                ->pause(500)
+                ->screenshot('select-city')
+                ->click('@district')
+                ->pause(500)
+                ->click('@option-district')
+                ->assertSee($district->name)
+                ->screenshot('select-district');
+        });
+    }
 
     public function createProduct($color = false, $size = false, $quantity = 10)
     {
