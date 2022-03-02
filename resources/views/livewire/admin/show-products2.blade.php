@@ -153,6 +153,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($products as $product)
+                      {{-- {{ dd($prueba)}} --}}
                             <tr>
                                 @if ($this->showColumn('Nombre'))
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -175,7 +176,6 @@
                                         <div class="text-sm text-gray-900">
                                             {{ $product->subcategory->category->name }}
                                         </div>
-                                        <div class="text-sm text-gray-500">{{ $product->subcategory->name }}</div>
                                     </td>
                                 @endif
                                 @if ($this->showColumn('Estado'))

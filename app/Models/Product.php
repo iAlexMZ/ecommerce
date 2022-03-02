@@ -44,10 +44,27 @@ class Product extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
- 
+
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'LIKE', "%{$search}%")
+            ->orWhereHas('subcategory', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhereHas('category', function ($query) use ($search) {
+                    $query->where('name', 'LIKE', "%{$search}%");
+                });
+            })->orWhereHas('colors', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%");
+            })->orWhereHas('sizes', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%");
+            })->orWhereHas('brads', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%");
+            });
     }
 
     public function getStockAttribute()
