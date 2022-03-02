@@ -15,7 +15,7 @@ class CreateOrderTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function the_cart_is_destroyed_when_the_order_is_created()
+    public function the_cart_is_destroyed_when_the_order_is_created_and_the_user_is_redirect_to_payment_route()
     {
         $product = $this->createProduct();
 
