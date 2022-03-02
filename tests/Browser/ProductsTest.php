@@ -242,19 +242,35 @@ class ProductsTest extends DuskTestCase
     public function it_shows_products_details()
     {
         $brand = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
 
         $category = Category::factory()->create([
             'name' => 'Celulares y tablets',
         ]);
 
+        $category2 = Category::factory()->create();
+
         $category->brands()->attach($brand->id);
+        $category2->brands()->attach($brand2->id);
 
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
+            'color' => false,
+            'size' => false,
+        ]);
+
+        $subcategory2 = Subcategory::factory()->create([
+            'category_id' => $category2->id,
+            'color' => false,
+            'size' => false,
         ]);
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
+        ]);
+
+        $product2 = Product::factory()->create([
+            'subcategory_id' => $subcategory2->id,
         ]);
 
         Image::factory()->create([
@@ -262,7 +278,12 @@ class ProductsTest extends DuskTestCase
             'imageable_type' => Product::class,
         ]);
 
-        $this->browse(function (Browser $browser) use ($category, $product) {
+        Image::factory()->create([
+            'imageable_id' => $product2->id,
+            'imageable_type' => Product::class,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($category, $product, $product2) {
             $browser->visit('/categories/' . $category->slug)
                 ->pause(1000)
                 ->assertSee(strtoupper($category->name))
@@ -270,6 +291,8 @@ class ProductsTest extends DuskTestCase
                 ->click('@product')
                 ->pause(500)
                 ->assertPathIs('/products/' . $product->slug)
+                ->assertPathIsNot('/products/' . $product2->slug)
+                ->assertSee($product->description)
                 ->assertSee(ucfirst($product->name))
                 ->pause(500)
                 ->assertSee($product->price)
@@ -313,10 +336,11 @@ class ProductsTest extends DuskTestCase
             $browser->visit('/products/' . $product->slug)
                 ->pause(1000)
                 ->assertSee(ucfirst($product->name));
-            for ($i = 1; $i < $product->quantity; $i++) {
+            for ($i = 0; $i <= $product->quantity; $i++) {
                 $browser->press('@button_more');
+                $browser->pause(500);
             };
-            $browser->pause(500);
+            $browser->pause(1000);
             $browser->assertButtonDisabled('@button_more');
             $browser->screenshot('add_more');
         });
@@ -355,6 +379,7 @@ class ProductsTest extends DuskTestCase
                 ->assertSee(ucfirst($product->name));
             for ($i = $product->quantity; $i > 1; $i--) {
                 $browser->press('@button_less');
+                $browser->pause(500);
             };
             $browser->pause(500);
             $browser->assertButtonDisabled('@button_less');
@@ -403,7 +428,6 @@ class ProductsTest extends DuskTestCase
 
         $product1 = Product::factory()->create([
             'subcategory_id' => $subcategory1->id,
-            'quantity' => 5,
         ]);
 
         Image::factory()->create([
@@ -413,7 +437,6 @@ class ProductsTest extends DuskTestCase
 
         $product2 = Product::factory()->create([
             'subcategory_id' => $subcategory2->id,
-            'quantity' => 5,
         ]);
 
         Image::factory()->create([
@@ -423,7 +446,6 @@ class ProductsTest extends DuskTestCase
 
         $product3 = Product::factory()->create([
             'subcategory_id' => $subcategory3->id,
-            'quantity' => 5,
         ]);
 
         Image::factory()->create([
@@ -439,19 +461,21 @@ class ProductsTest extends DuskTestCase
                 $browser->assertNotPresent('@size');
                 $browser->screenshot('product_with_color');
             };
-            $browser->pause(1000);
-            if ($browser->visit('/products/' . $product2->slug)) {
-                $browser->pause(500);
-                $browser->assertNotPresent('@color');
-                $browser->assertNotPresent('@size');
-                $browser->screenshot('product_without_color_size');
-            };
+
             $browser->pause(1000);
             if ($browser->visit('/products/' . $product3->slug)) {
                 $browser->pause(500);
                 $browser->assertPresent('@color');
                 $browser->assertPresent('@size');
                 $browser->screenshot('product_with_color_size');
+            };
+
+            $browser->pause(1000);
+            if ($browser->visit('/products/' . $product2->slug)) {
+                $browser->pause(500);
+                $browser->assertNotPresent('@color');
+                $browser->assertNotPresent('@size');
+                $browser->screenshot('product_without_color_size');
             };
         });
     }

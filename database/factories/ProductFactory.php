@@ -15,7 +15,7 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->sentence(2);
+        $name = $this->faker->sentence(1);
 
         $subcategory = Subcategory::all()->random();
         $category = $subcategory->category;

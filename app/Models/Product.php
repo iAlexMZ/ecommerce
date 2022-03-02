@@ -62,8 +62,6 @@ class Product extends Model
                 $query->where('name', 'LIKE', "%{$search}%");
             })->orWhereHas('sizes', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
-            })->orWhereHas('brand', function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%");
             });
     }
 

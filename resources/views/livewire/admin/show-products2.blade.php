@@ -43,6 +43,26 @@
                     </span>
                 </div>
             </div>
+
+           {{--  <aside>
+                <h2 class="font-semibold text-center mb-2">Subcategorías</h2>
+                <ul class="divide-y divide-gray-200">
+                    <li class="py-2 text-sm ">
+                        <a class="cursor-pointer hover:text-orange-500 capitalize"></a>
+                    </li>
+                </ul>
+
+                <h2 class="font-semibold text-center mt-4 mb-2">Marcas</h2>
+                <ul class="divide-y divide-gray-200">
+                    <li class="py-2 text-sm ">
+                        <a class="cursor-pointer hover:text-orange-500 capitalize"></a>
+                    </li>
+                </ul>
+
+                <x-jet-button class="mt-4" wire:click="limpiar">
+                    Eliminar Filtros
+                </x-jet-button>
+            </aside> --}}
         </div>
         <div class="px-6 py-4 mt-0">
             <x-jet-input class="w-1/2" wire:model="search" type="text"
@@ -153,7 +173,6 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($products as $product)
-                      {{-- {{ dd($prueba)}} --}}
                             <tr>
                                 @if ($this->showColumn('Nombre'))
                                     <td class="px-6 py-4 whitespace-nowrap">

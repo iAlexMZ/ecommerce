@@ -25,6 +25,19 @@ class SearchTest extends TestCase
             ->assertDontSee('Teléfono');
     }
 
+    /** @test */
+    public function doesnt_show_any_product_if_nothing_is_written_in_the_search_input()
+    {
+        $this->createProduct('Teclado');
+        $this->get('/');
+
+        Livewire::test(Search::class)
+            ->set('search', '')
+            ->assertDontSee('Teclado');
+    }
+
+
+
 
 
 
@@ -43,7 +56,7 @@ class SearchTest extends TestCase
             'name' => $name,
             'brand_id' => $brand->id,
         ]);
-        
+
         Image::factory()->create([
             'imageable_id' => $product->id,
             'imageable_type' => Product::class
@@ -51,5 +64,4 @@ class SearchTest extends TestCase
 
         return $product;
     }
-
 }

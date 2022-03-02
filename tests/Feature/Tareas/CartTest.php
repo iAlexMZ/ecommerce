@@ -54,7 +54,7 @@ class CartTest extends TestCase
     }
 
     /** @test */
-    public function a_product_can_add_to_cart()
+    public function a_product_with_color_and_size_can_add_to_cart()
     {
         $product1 = $this->createProduct(true, true);
         $product2 = $this->createProduct(true, true);
@@ -87,7 +87,7 @@ class CartTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_the_products_in_the_cart()
+    public function it_shows_the_products_in_the_shopping_cart()
     {
         $product1 = $this->createProduct();
         $product2 = $this->createProduct();
@@ -96,6 +96,9 @@ class CartTest extends TestCase
             ->assertViewIs('livewire.add-cart-item')
             ->call('addItem', $product1)
             ->assertStatus(200);
+
+        $this->assertEquals($product1->id, Cart::content()->first()->id);
+        $this->assertNotEquals($product2->id, Cart::content()->first()->id);
 
         Livewire::test(ShoppingCart::class)
             ->assertViewIs('livewire.shopping-cart')
@@ -135,8 +138,6 @@ class CartTest extends TestCase
     /** @test */
     public function the_products_can_be_delete_in_the_shopping_cart()
     {
-        $this->markTestIncomplete();
-
         $product = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
@@ -144,15 +145,15 @@ class CartTest extends TestCase
             ->call('addItem', $product)
             ->assertStatus(200);
 
-        Livewire::test(ShoppingCart::class, ['product' => $product,'rowId' => Cart::content()->first()->rowId])
+        Livewire::test(ShoppingCart::class, ['product' => $product])
             ->assertViewIs('livewire.shopping-cart')
             ->assertSee($product->name)
-            ->call('delete')
+            ->call('delete', Cart::content()->first()->rowId)
             ->assertDontSee($product->name);
     }
 
     /** @test */
-    public function the_cart_can_be_empty()
+    public function the_cart_can_be_destroy()
     {
         $product = $this->createProduct();
 
@@ -181,8 +182,10 @@ class CartTest extends TestCase
 
         $this->post('/logout');
 
-        $this->assertDatabaseHas('shoppingcart', ['identifier' => 1]);
+        $this->assertDatabaseHas('shoppingcart', ['identifier' => $user->id]);
     }
+
+
 
 
 
