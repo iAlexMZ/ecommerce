@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser;
+namespace Tests\Browser\Tareas;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

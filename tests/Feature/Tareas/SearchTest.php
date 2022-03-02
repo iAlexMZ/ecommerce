@@ -26,7 +26,7 @@ class SearchTest extends TestCase
     }
 
     /** @test */
-    public function doesnt_show_any_product_if_nothing_is_written_in_the_search_input()
+    public function dont_show_any_product_if_nothing_is_written_in_the_search_input()
     {
         $this->createProduct('Teclado');
         $this->get('/');
@@ -53,8 +53,8 @@ class SearchTest extends TestCase
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
-            'name' => $name,
             'brand_id' => $brand->id,
+            'name' => $name,
         ]);
 
         Image::factory()->create([
