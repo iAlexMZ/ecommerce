@@ -3,21 +3,14 @@
 namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
-use Livewire\Livewire;
-use App\Http\Livewire\AddCartItem;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{User, Brand, Image, Product, Category, Subcategory};
+use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
 {
     use RefreshDatabase;
-
-    /** @test */
-    public function an_unlogged_user_cant_access_to_create_order()
-    {
-        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
-    }
 
     /** @test */
     public function an_unlogged_user_cant_access_to_admin_view()
@@ -26,23 +19,16 @@ class AdminTest extends TestCase
     }
 
     /** @test */
-    public function a_logged_user_can_access_to_create_order()
+    public function only_user_admin_can_access_to_admin_view()
     {
-        $product = $this->createProduct();
+        Role::create(['name' => 'admin']);
 
-        Livewire::test(AddCartItem::class, ['product' => $product])
-            ->call('addItem', $product)
-            ->assertStatus(200);
+        $adminUser = User::factory()->create()->assignRole('admin');
+        $normalUser = User::factory()->create();
 
-        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
+        $this->actingAs($adminUser)->get('/admin')->assertStatus(200);
+        $this->actingAs($normalUser)->get('/admin')->assertStatus(403);
     }
-
-    /** @test */
-    public function a_logged_admin_user_cant_access_to_admin_view()
-    {
-        $this->actingAs(User::factory()->create(['id' => 1]))->get('/orders/create')->assertStatus(200);
-    }
-
 
     public function createProduct($color = false, $size = false, $quantity = 10)
     {

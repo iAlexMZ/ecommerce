@@ -3,12 +3,11 @@
 namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
+use App\Http\Livewire\{AddCartItem};
+use App\Models\{Brand, Image, Product, Category, Subcategory};
 use Livewire\Livewire;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Brand, Image, Product, Category, Subcategory};
-use App\Http\Livewire\{AddCartItem};
 
 class ProductTest extends TestCase
 {
@@ -40,6 +39,11 @@ class ProductTest extends TestCase
            ->assertSeeText('Stock disponible: ' . $product1->quantity)
            ->assertDontSeeText('Stock disponible: ' . $product2->quantity);
    }
+
+
+
+
+   
 
    public function createProduct($color = false, $size = false, $quantity = 10)
     {

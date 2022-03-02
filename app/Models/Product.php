@@ -55,14 +55,14 @@ class Product extends Model
         return $query->where('name', 'LIKE', "%{$search}%")
             ->orWhereHas('subcategory', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%")
-                ->orWhereHas('category', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%{$search}%");
-                });
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', "%{$search}%");
+                    });
             })->orWhereHas('colors', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             })->orWhereHas('sizes', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
-            })->orWhereHas('brads', function ($query) use ($search) {
+            })->orWhereHas('brand', function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%{$search}%");
             });
     }

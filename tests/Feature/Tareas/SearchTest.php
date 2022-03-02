@@ -16,45 +16,40 @@ class SearchTest extends TestCase
     /** @test */
     public function can_be_filter_by_name()
     {
-        $product1 = $this->createProduct();
-        $product2 = $this->createProduct();
+        $this->createProduct('Teclado');
+        $this->createProduct('Teléfono');
 
         Livewire::test(Search::class)
-            ->assertSet('search', $product1->name)
-            ->assertSee($product1->name)
-            ->assertDontSee($product2->name);
-
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+            ->set('search', 'Tecl')
+            ->assertSee('Teclado')
+            ->assertDontSee('Teléfono');
     }
 
-    public function createProduct($color = false, $size = false, $quantity = 10)
+
+
+
+    public function createProduct($name)
     {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
+        $category = Category::factory()->create();
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
         ]);
+
+        $brand = Brand::factory()->create();
+        $category->brands()->attach([$brand->id]);
 
         $product = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
+            'name' => $name,
+            'brand_id' => $brand->id,
         ]);
-
+        
         Image::factory()->create([
             'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
+            'imageable_type' => Product::class
         ]);
 
         return $product;
     }
+
 }

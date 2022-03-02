@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Tareas;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Livewire\Livewire;
 use Tests\TestCase;
 use App\Models\Category;
 use App\Http\Livewire\Navigation;
+use Livewire\Livewire;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryTest extends TestCase
 {

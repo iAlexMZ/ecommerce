@@ -3,13 +3,12 @@
 namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
-use App\Models\User;
+use App\Http\Livewire\{AddCartItem, CreateOrder};
+use App\Models\{Brand, Image, Product, Category, Subcategory, User};
 use Livewire\Livewire;
-use App\Http\Livewire\CreateOrder;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Brand, Image, Product, Category, Subcategory};
-use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
+
 
 class CreateOrderTest extends TestCase
 {
@@ -61,7 +60,23 @@ class CreateOrderTest extends TestCase
         $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
     }
 
+    /** @test */
+    public function an_unlogged_user_cant_access_to_create_order()
+    {
+        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
+    }
 
+    /** @test */
+    public function a_logged_user_can_access_to_create_order()
+    {
+        $product = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product)
+            ->assertStatus(200);
+
+        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
+    }
 
 
 

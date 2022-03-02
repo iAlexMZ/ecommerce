@@ -3,16 +3,27 @@
 namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
+use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
+use App\Models\{User, Brand, Image, Product, Category, Subcategory};
 use Livewire\Livewire;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
-use App\Models\{Brand, Image, Product, Category, Subcategory};
-use App\Models\User;
 
 class CartTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** @test */
+    public function the_cart_increment_when_add_a_product()
+    {
+        $product = $this->createProduct();
+
+        Livewire::test(AddCartItem::class, ['product' => $product])
+            ->call('addItem', $product)
+            ->assertStatus(200);
+
+        $this->assertEquals(Cart::content()->first()->id, 1);
+    }
 
     /** @test */
     public function a_product_without_size_or_color_can_add_to_cart()
@@ -76,34 +87,6 @@ class CartTest extends TestCase
     }
 
     /** @test */
-    public function the_cart_increment_when_add_a_product()
-    {
-        $product = $this->createProduct();
-
-        Livewire::test(AddCartItem::class, ['product' => $product])
-            ->call('addItem', $product)
-            ->assertStatus(200);
-
-        $this->assertEquals(Cart::content()->first()->id, 1);
-    }
-
-    /** @test */
-    public function can_be_filter_by_name()
-    {
-        $product1 = $this->createProduct();
-        $product2 = $this->createProduct();
-
-        Livewire::test(Search::class)
-            ->assertSet('search', $product1->name)
-            ->assertSee($product1->name)
-            ->assertDontSee($product2->name);
-
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /** @test */
     public function it_shows_the_products_in_the_cart()
     {
         $product1 = $this->createProduct();
@@ -152,6 +135,8 @@ class CartTest extends TestCase
     /** @test */
     public function the_products_can_be_delete_in_the_shopping_cart()
     {
+        $this->markTestIncomplete();
+
         $product = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
@@ -159,7 +144,7 @@ class CartTest extends TestCase
             ->call('addItem', $product)
             ->assertStatus(200);
 
-        Livewire::test(ShoppingCart::class, ['rowId' => Cart::content()->first()->rowId])
+        Livewire::test(ShoppingCart::class, ['product' => $product,'rowId' => Cart::content()->first()->rowId])
             ->assertViewIs('livewire.shopping-cart')
             ->assertSee($product->name)
             ->call('delete')
@@ -198,11 +183,6 @@ class CartTest extends TestCase
 
         $this->assertDatabaseHas('shoppingcart', ['identifier' => 1]);
     }
-
-
-
-
-
 
 
 
