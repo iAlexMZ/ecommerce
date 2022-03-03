@@ -4,7 +4,7 @@ namespace Tests\Feature\Tareas;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Brand, Image, Product, Category, Color, ColorProduct, Size, Subcategory};
+use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
 
 class ProductStockTest extends TestCase
 {
@@ -45,6 +45,7 @@ class ProductStockTest extends TestCase
         $this->get('/products/' . $normalProduct->slug)
             ->assertSee($normalProduct->quantity);
     }
+
 
 
 

@@ -92,16 +92,25 @@ class ProductsTest extends DuskTestCase
     public function it_shows_products_published()
     {
         $brand = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
 
         $category = Category::factory()->create();
         $category->brands()->attach($brand->id);
+
+        $category2 = Category::factory()->create();
+        $category2->brands()->attach($brand2->id);
 
         $subcategory = Subcategory::factory()->create([
             'category_id' => $category->id,
         ]);
 
+        $subcategory2 = Subcategory::factory()->create([
+            'category_id' => $category2->id,
+        ]);
+
         $product1 = Product::factory()->create([
             'subcategory_id' => $subcategory->id,
+            'status' => 2,
         ]);
 
         Image::factory()->create([
@@ -110,7 +119,7 @@ class ProductsTest extends DuskTestCase
         ]);
 
         $product2 = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
+            'subcategory_id' => $subcategory2->id,
             'status' => 1,
         ]);
 
@@ -132,12 +141,16 @@ class ProductsTest extends DuskTestCase
     public function the_products_can_be_filter_by_subcategory()
     {
         $brand = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
 
         $category = Category::factory()->create([
             'name' => 'Celulares y tablets',
         ]);
 
+        $category2 = Category::factory()->create();
+
         $category->brands()->attach($brand->id);
+        $category2->brands()->attach($brand2->id);
 
         $subcategory1 = Subcategory::factory()->create([
             'name' => 'Celulares y smartphones',
@@ -146,7 +159,7 @@ class ProductsTest extends DuskTestCase
 
         $subcategory2 = Subcategory::factory()->create([
             'name' => 'Accesorios para celulares',
-            'category_id' => $category->id,
+            'category_id' => $category2->id,
         ]);
 
         $product1 = Product::factory()->create([
@@ -167,10 +180,11 @@ class ProductsTest extends DuskTestCase
             'imageable_type' => Product::class,
         ]);
 
-        $this->browse(function (Browser $browser) use ($category, $product1, $product2) {
+        $this->browse(function (Browser $browser) use ($category, $category2, $product1, $product2) {
             $browser->visit('/categories/' . $category->slug)
                 ->pause(1000)
                 ->assertSee(strtoupper($category->name))
+                ->assertDontSee(strtoupper($category2->name))
                 ->assertSee("Subcategorías")
                 ->click('@subcategories_filter')
                 ->assertSee(ucfirst($product1->name))
@@ -185,6 +199,7 @@ class ProductsTest extends DuskTestCase
     public function the_products_can_be_filter_by_brand()
     {
         $brand = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
 
         $category1 = Category::factory()->create([
             'name' => 'Celulares y tablets',
@@ -195,7 +210,7 @@ class ProductsTest extends DuskTestCase
         ]);
 
         $category1->brands()->attach($brand->id);
-        $category2->brands()->attach($brand->id);
+        $category2->brands()->attach($brand2->id);
 
         $subcategory1 = Subcategory::factory()->create([
             'name' => 'Celulares y smartphones',
@@ -269,13 +284,13 @@ class ProductsTest extends DuskTestCase
             'subcategory_id' => $subcategory->id,
         ]);
 
-        $product2 = Product::factory()->create([
-            'subcategory_id' => $subcategory2->id,
-        ]);
-
-        Image::factory()->create([
+        $image = Image::factory()->create([
             'imageable_id' => $product->id,
             'imageable_type' => Product::class,
+        ]);
+
+        $product2 = Product::factory()->create([
+            'subcategory_id' => $subcategory2->id,
         ]);
 
         Image::factory()->create([
@@ -283,7 +298,7 @@ class ProductsTest extends DuskTestCase
             'imageable_type' => Product::class,
         ]);
 
-        $this->browse(function (Browser $browser) use ($category, $product, $product2) {
+        $this->browse(function (Browser $browser) use ($category, $product, $product2, $image) {
             $browser->visit('/categories/' . $category->slug)
                 ->pause(1000)
                 ->assertSee(strtoupper($category->name))
@@ -292,6 +307,7 @@ class ProductsTest extends DuskTestCase
                 ->pause(500)
                 ->assertPathIs('/products/' . $product->slug)
                 ->assertPathIsNot('/products/' . $product2->slug)
+                ->assertSee($image->imageable_id)
                 ->assertSee($product->description)
                 ->assertSee(ucfirst($product->name))
                 ->pause(500)
@@ -390,7 +406,9 @@ class ProductsTest extends DuskTestCase
     /** @test */
     public function it_shows_the_color_and_size_dropdowns_depending_on_the_selected_product()
     {
-        $brand = Brand::factory()->create();
+        $brand1 = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
+        $brand3 = Brand::factory()->create();
 
         $category1 = Category::factory()->create([
             'name' => 'Celulares y tablets',
@@ -404,9 +422,9 @@ class ProductsTest extends DuskTestCase
             'name' => 'Moda',
         ]);
 
-        $category1->brands()->attach($brand->id);
-        $category2->brands()->attach($brand->id);
-        $category3->brands()->attach($brand->id);
+        $category1->brands()->attach($brand1->id);
+        $category2->brands()->attach($brand2->id);
+        $category3->brands()->attach($brand3->id);
 
         $subcategory1 = Subcategory::factory()->create([
             'category_id' => $category1->id,

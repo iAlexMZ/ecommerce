@@ -4,12 +4,12 @@
     </p>
     <div class="flex">
         <div class="mr-4">
-            <x-jet-secondary-button dusk="button_less" disabled x-bind:disabled="$wire.qty <= 1"
+            <x-jet-secondary-button dusk="button-more" disabled x-bind:disabled="$wire.qty <= 1"
                 wire:loading.attr="disabled" wire:target="decrement" wire:click="decrement">
                 -
             </x-jet-secondary-button>
             <span class="mx-2 text-gray-700">{{ $qty }}</span>
-            <x-jet-secondary-button dusk="button_more" wire:click="increment"
+            <x-jet-secondary-button dusk="button-more" wire:click="increment"
                 x-bind:disabled="$wire.qty >= $wire.quantity" wire:loading.attr="disabled" wire:target="increment">
                 +
             </x-jet-secondary-button>

@@ -22,13 +22,13 @@ class CartTest extends TestCase
             ->call('addItem', $product)
             ->assertStatus(200);
 
-        $this->assertEquals(Cart::content()->first()->id, 1);
+        $this->assertEquals(Cart::content()->first()->id, $product->id);
     }
 
     /** @test */
-    public function a_product_without_size_or_color_can_add_to_cart()
+    public function a_product_without_size_and_color_can_add_to_cart()
     {
-        $product1 = $this->createProduct(false, false, 10);
+        $product1 = $this->createProduct(false, false);
         $product2 = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product1])
@@ -43,7 +43,7 @@ class CartTest extends TestCase
     public function a_product_without_size_can_add_to_cart()
     {
         $product1 = $this->createProduct(true, false);
-        $product2 = $this->createProduct(true, false);
+        $product2 = $this->createProduct(false, false);
 
         Livewire::test(AddCartItemColor::class, ['product' => $product1])
             ->call('addItem', $product1)
@@ -57,7 +57,7 @@ class CartTest extends TestCase
     public function a_product_with_color_and_size_can_add_to_cart()
     {
         $product1 = $this->createProduct(true, true);
-        $product2 = $this->createProduct(true, true);
+        $product2 = $this->createProduct(false, false);
 
         Livewire::test(AddCartItemSize::class, ['product' => $product1])
             ->call('addItem', $product1)
@@ -68,7 +68,7 @@ class CartTest extends TestCase
     }
 
     /** @test */
-    public function the_product_can_see_in_the_cart()
+    public function the_product_can_see_in_the_dropdown_cart()
     {
         $product1 = $this->createProduct();
         $product2 = $this->createProduct();
@@ -145,10 +145,10 @@ class CartTest extends TestCase
             ->call('addItem', $product)
             ->assertStatus(200);
 
-        Livewire::test(ShoppingCart::class, ['product' => $product])
+        Livewire::test(ShoppingCart::class, ['product' => $product, 'rowId' => Cart::content()->first()->rowId])
             ->assertViewIs('livewire.shopping-cart')
             ->assertSee($product->name)
-            ->call('delete', Cart::content()->first()->rowId)
+            ->call('delete', 'rowId')
             ->assertDontSee($product->name);
     }
 

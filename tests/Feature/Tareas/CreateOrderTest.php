@@ -37,7 +37,7 @@ class CreateOrderTest extends TestCase
     }
 
     /** @test */
-    public function only_registered_user_can_create_a_order()
+    public function only_logged_user_can_create_a_order()
     {
         $product = $this->createProduct();
 
@@ -51,30 +51,12 @@ class CreateOrderTest extends TestCase
     }
 
     /** @test */
-    public function a_user_unregistered_cant_create_a_order()
+    public function a_user_unlogged_cant_create_a_order()
     {
         $product = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product);
-        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
-    }
-
-    /** @test */
-    public function an_unlogged_user_cant_access_to_create_order()
-    {
-        $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
-    }
-
-    /** @test */
-    public function a_logged_user_can_access_to_create_order()
-    {
-        $product = $this->createProduct();
-
-        Livewire::test(AddCartItem::class, ['product' => $product])
-            ->call('addItem', $product)
-            ->assertStatus(200);
-
         $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
     }
 

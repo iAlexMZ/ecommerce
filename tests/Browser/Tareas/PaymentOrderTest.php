@@ -17,15 +17,10 @@ class PaymentOrderTest extends DuskTestCase
     public function the_user_can_choose_the_shipping_option()
     {
         $product = $this->createProduct();
-        $user = User::factory()->create();
 
-        $this->browse(function (Browser $browser) use ($product, $user) {
-            $browser->visit('/login')
-                ->pause(1000)
-                ->type('email', $user->email)
-                ->type('password', 'password')
-                ->press('INICIAR SESIÓN')
-                ->assertPathIs('/')
+        $this->browse(function (Browser $browser) use ($product) {
+            $browser->loginAs(User::factory()->create())
+                ->visit('/')
                 ->click('@product')
                 ->press('AGREGAR AL CARRITO DE COMPRAS')
                 ->pause(1000)

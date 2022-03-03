@@ -40,13 +40,13 @@ class CategoryTest extends DuskTestCase
             'subcategory_id' => $subcategory->id,
         ]);
 
-        $product2 = Product::factory()->create([
-            'subcategory_id' => $subcategory2->id,
-        ]);
-
         Image::factory()->create([
             'imageable_id' => $product->id,
             'imageable_type' => Product::class,
+        ]);
+
+        $product2 = Product::factory()->create([
+            'subcategory_id' => $subcategory2->id,
         ]);
 
         Image::factory()->create([
