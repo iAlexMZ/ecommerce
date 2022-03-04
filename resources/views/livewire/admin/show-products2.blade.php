@@ -46,7 +46,7 @@
                     </div>
                 </div>
 
-                <div x-data="{dropdownMenu: false}" class="fixed inline-block ml-1">
+                <div x-data="{dropdownMenu: false}" class="absolute inline-block ml-1">
                     <x-button-link @click="dropdownMenu = ! dropdownMenu"
                         class="ml-5 flex items-center p-2 bg-white rounded-md">
                         <i class="fa-solid fa-filter"></i>
@@ -96,10 +96,10 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col"
+                            {{-- <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Vendidos
-                            </th>
+                            </th> --}}
                             @if ($this->showColumn('Nombre'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -201,13 +201,12 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($products as $product)
-                            <tr>
+                            {{-- <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">
-                                        {{ count($orders->pluck('content')) }}
                                     </div>
                                 </td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 @if ($this->showColumn('Nombre'))
                                     <td class="px-6 py-4 whitespace-nowrap">
