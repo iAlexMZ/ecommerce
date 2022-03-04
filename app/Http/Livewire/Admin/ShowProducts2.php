@@ -43,10 +43,6 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
-    public function newEloquentBuilder($query)
-    {
-        return new ProductQuery($query);
-    }
 
     public function clear()
     {

@@ -11,17 +11,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter extends QueryFilter
 {
-    public function rules(): array
+     public function rules(): array
     {
         return [
-            'category' => 'filled|exists:categories,id',
+            'categorySearch' => 'filled',
         ];
     }
 
-    public function category($query, $category)
+    /*
+    public function filterByCategorySearch($query, $categorySearch)
     {
-        return $query->whereHas('subcategory.category', function ($query) use ($category) {
-            $query->where('id', $category);
+        return $query->whereHas('subcategory', function ($query) use ($categorySearch) {
+            $query->whereHas('category', function ($query) use ($categorySearch) {
+                $query->where('name', 'LIKE', "%{$categorySearch}%");
+            });
         });
-    }
+    } */
 }
