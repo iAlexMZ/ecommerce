@@ -7,6 +7,7 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\WithPagination;
+use App\Filters\ProductFilter;
 use App\Http\Livewire\Admin\ProductQuery;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,7 +17,7 @@ class ShowProducts2 extends Component
 
     public $pagination = 15;
     public $columns = ['Nombre', 'Categoría', 'Estado', 'Precio', 'Subcategoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha Creación', 'Fecha Edición'];
-    public $search, $categorySearch, $subcategorySearch, $brandSearch, $priceSearch, $colorsSearch, $sizesSearch;
+    public $search, $category, $subcategory, $brand, $price, $color, $size;
     public $status = 2;
     public $selectedColumns = [];
     public $show = false;
@@ -44,6 +45,25 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
+    protected function getProducts(ProductFilter $productFilter)
+    {
+        $products = Product::query()
+            ->with('subcategory.category')
+            ->filterBy($productFilter, [
+                'search' => $this->search,
+                'category' => $this->category,
+                'subcategory' => $this->subcategory,
+                'brand' => $this->brand,
+                'status' => $this->status,
+                'price' => $this->price,
+                'color' => $this->color,
+                'size' => $this->size,
+            ])->paginate($this->pagination);
+
+        $products->appends($productFilter->valid());
+
+        return $products;
+    }
 
     public function clear()
     {
@@ -56,7 +76,7 @@ class ShowProducts2 extends Component
 
     public function clearFilters()
     {
-        $this->reset(['search', 'categorySearch', 'subcategorySearch', 'brandSearch', 'priceSearch', 'colorsSearch', 'sizesSearch', 'status']);
+        $this->reset(['search', 'category', 'subcategory', 'brand', 'price', 'color', 'size', 'status']);
         $this->resetPage();
     }
 
@@ -83,33 +103,18 @@ class ShowProducts2 extends Component
         $this->camp = $camp;
     }
 
-    public function render()
+    public function render(ProductFilter $productFilter)
     {
-        $products = Product::query()->where('name', 'LIKE', "%{$this->search}%")
-            ->categoryFilter($this->categorySearch)
-            ->subcategoryFilter($this->subcategorySearch)
-            ->brandFilter($this->brandSearch)
-            ->statusFilter($this->status);
-
-        if ($this->colorsSearch) {
-            $products = $products = Product::colorsFilter($this->colorsSearch);
-        }
-
-        if ($this->sizesSearch) {
-            $products = $products = Product::sizesFilter($this->sizesSearch);
-        }
-
-        if ($this->priceSearch) {
-            $products = $products = $products->where('price', 'LIKE', "%{$this->priceSearch}%");
-        }
+        $products = Product::query()->where('name', 'LIKE', "%{$this->search}%");
 
         if ($this->camp && $this->order) {
             $products = $products->orderBy($this->camp, $this->order);
-        }
+        };
 
         $products = $products->paginate($this->pagination);
 
-        return view('livewire.admin.show-products2',  compact('products'))
-            ->layout('layouts.admin');
+        return view('livewire.admin.show-products2',  [
+            'products' => $this->getProducts($productFilter),
+        ])->layout('layouts.admin');
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\ColorSize;
-use App\Models\QueryFilter;
+use App\Filters\QueryFilter;
 use App\Models\ColorProduct;
 use App\Models\ProductQuery;
 use Illuminate\Database\Eloquent\Model;
