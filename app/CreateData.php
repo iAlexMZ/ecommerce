@@ -48,7 +48,7 @@ trait CreateData
 
         return $user;
     }
-
+    
     public function createProductName($name)
     {
         $category = Category::factory()->create();
