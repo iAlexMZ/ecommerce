@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Order;
 use App\Models\Product;
 use Livewire\Component;
+use App\Models\Category;
 use Livewire\WithPagination;
 use App\Http\Livewire\Admin\ProductQuery;
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 
 class ShowProducts2 extends Component
@@ -84,6 +85,7 @@ class ShowProducts2 extends Component
 
     public function render()
     {
+        $orders = Order::all();
         $products = Product::query()->where('name', 'LIKE', "%{$this->search}%")
             ->categoryFilter($this->categorySearch)
             ->subcategoryFilter($this->subcategorySearch)
@@ -108,7 +110,7 @@ class ShowProducts2 extends Component
 
         $products = $products->paginate($this->pagination);
 
-        return view('livewire.admin.show-products2',  compact('products'))
+        return view('livewire.admin.show-products2',  compact('products', 'orders'))
             ->layout('layouts.admin');
     }
 }

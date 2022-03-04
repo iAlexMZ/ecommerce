@@ -5,6 +5,8 @@ namespace Tests\Feature\Tareas;
 use App\CreateData;
 use Tests\TestCase;
 use Livewire\Livewire;
+use App\Listeners\MergeTheCart;
+use Illuminate\Auth\Events\Login;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{User, Brand, Image, Product, Category, Subcategory};
@@ -181,26 +183,40 @@ class CartTest extends TestCase
     public function shopping_cart_is_save_when_logout()
     {
         $user = $this->createUser();
-        $product = $this->createProduct(false, false, $quantity = 10);
-        $product2 = $this->createProduct(false, false, $quantity = 15);
+        $product = $this->createProduct(false, false, 10);
+        $price = $product->price;
+        $product2 = $this->createProduct(false, false, 15);
+        $price2 = $product->price;
+        $product3 = $this->createProduct(false, false, 20);
 
-
-        Livewire::test(AddCartItem::class, ['product' => $product, 'product2' => $product2])
+        Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product)
+            ->assertStatus(200);
+
+        Livewire::test(AddCartItem::class, ['product' => $product2])
             ->call('addItem', $product2)
             ->assertStatus(200);
 
         $content = Cart::content();
 
         $this->post('/logout');
+
         $this->assertDatabaseHas('shoppingcart', ['content' => serialize($content)]);
 
+        $cartBack = new MergeTheCart();
+        $reLogin = new Login('web', $user, true);
         $this->actingAs($user);
 
-        /* $response = $this->get('/shopping-cart');
+        $cartBack->handle($reLogin);
 
-        $response->assertStatus(200)
+        $this->get('/orders/create')
+            ->assertStatus(200)
             ->assertSee($product->name)
-            ->assertSee($product2->name); */
+            ->assertSee($price)
+            ->assertSee($product->quantity)
+            ->assertSee($product2->name)
+            ->assertSee($price2)
+            ->assertSee($product2->quantity)
+            ->assertDontSee($product3->name);
     }
 }

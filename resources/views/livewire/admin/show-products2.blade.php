@@ -54,14 +54,12 @@
                     </x-button-link>
                     <div x-show="dropdownMenu" class="absolute left-1 py-2 mt-2 bg-white rounded-md shadow-xl">
                         <aside>
-                            <x-jet-input wire:model="categorySearch" type="text"
-                                placeholder="Busca por categoría" />
+                            <x-jet-input wire:model="categorySearch" type="text" placeholder="Busca por categoría" />
 
                             <x-jet-input wire:model="subcategorySearch" type="text"
                                 placeholder="Busca por subcategoría" />
 
-                            <x-jet-input wire:model="brandSearch" type="text"
-                                placeholder="Busca por marca" />
+                            <x-jet-input wire:model="brandSearch" type="text" placeholder="Busca por marca" />
 
                             <select wire:model="status" class="form-control w1/3">
                                 <option value="" selected disabled>Seleccionar el estado</option>
@@ -69,8 +67,7 @@
                                 <option value="1">No Publicado</option>
                             </select>
 
-                            <x-jet-input wire:model="priceSearch" type="text"
-                                placeholder="Busca por precio" />
+                            <x-jet-input wire:model="priceSearch" type="text" placeholder="Busca por precio" />
 
                             <input type="checkbox" wire:model="colorsSearch">
                             <label>Color</label>
@@ -99,6 +96,10 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Vendidos
+                            </th>
                             @if ($this->showColumn('Nombre'))
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -200,6 +201,13 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($products as $product)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">
+                                        {{ count($orders->pluck('content')) }}
+                                    </div>
+                                </td>
+                            </tr>
                             <tr>
                                 @if ($this->showColumn('Nombre'))
                                     <td class="px-6 py-4 whitespace-nowrap">
