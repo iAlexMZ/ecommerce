@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
@@ -15,7 +15,7 @@ use App\Models\Image;
 class ProductsTest extends DuskTestCase
 {
     use DatabaseMigrations;
-    use CreateProduct;
+    use CreateData;
 
     /** @test */
     public function it_shows_a_five_products()
@@ -158,6 +158,7 @@ class ProductsTest extends DuskTestCase
         });
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function the_button_to_add_more_quantity_of_product_must_be_limited()
     {
@@ -177,6 +178,7 @@ class ProductsTest extends DuskTestCase
         });
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function the_button_to_less_more_quantity_of_product_must_be_limited()
     {

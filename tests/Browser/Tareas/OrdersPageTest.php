@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Livewire\Livewire;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -13,8 +13,9 @@ use App\Models\{Brand, Category, Subcategory, Image, Product, User};
 class OrdersPageTest extends DuskTestCase
 {
     use DatabaseMigrations;
-    use CreateProduct;
+    use CreateData;
 
+    //Test ya modificado con una única línea
     /** @test */
     public function a_user_can_see_his_orders()
     {

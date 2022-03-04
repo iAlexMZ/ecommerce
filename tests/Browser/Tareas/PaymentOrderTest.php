@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Tareas;
 
+use App\CreateData;
 use Livewire\Livewire;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -12,7 +13,9 @@ use App\Models\{Brand, Category, City, Department, District, Subcategory, Image,
 class PaymentOrderTest extends DuskTestCase
 {
     use DatabaseMigrations;
+    use CreateData;
 
+    //Test ya modificado en una sola línea
     /** @test */
     public function the_user_can_choose_the_shipping_option()
     {
@@ -20,7 +23,7 @@ class PaymentOrderTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($product) {
             $browser->loginAs(User::factory()->create())
-                ->visit('/')
+                ->assertPathIs('/')
                 ->click('@product')
                 ->press('AGREGAR AL CARRITO DE COMPRAS')
                 ->pause(1000)
@@ -76,34 +79,5 @@ class PaymentOrderTest extends DuskTestCase
                 ->assertSee($district->name)
                 ->screenshot('select-district');
         });
-    }
-
-    public function createProduct($color = false, $size = false, $quantity = 10)
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
     }
 }

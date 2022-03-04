@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use App\Http\Livewire\AddCartItem;
 use App\Http\Livewire\CreateOrder;
 use Tests\TestCase;
@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class AuthorizedUserTest extends TestCase
 {
     use RefreshDatabase;
-    use CreateProduct;
+    use CreateData;
 
     /** @test */
     public function an_unlogged_user_cant_access_to_admin_view()

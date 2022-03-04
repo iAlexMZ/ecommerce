@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem};
 use App\Models\{Brand, Image, Product, Category, Subcategory};
@@ -13,13 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
-    use CreateProduct;
+    use CreateData;
 
+    //Test ya modificado con una única línea
    /** @test */
    public function is_not_possible_to_add_more_products_that_the_stock_is_0()
    {
-       $quantity = 4;
-       $product = $this->createProduct(false, false, $quantity);
+       $product = $this->createProduct(false, false, $quantity = 4);
 
        for ($i = 0; $i < $quantity; $i++) {
            Livewire::test(AddCartItem::class, ['product' => $product])

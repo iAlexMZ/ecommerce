@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Tareas;
 
+use App\CreateData;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
@@ -12,11 +13,13 @@ use App\Models\Subcategory;
 class AccountTest extends DuskTestCase
 {
     use DatabaseMigrations;
+    use CreateData;
 
+    //Test ya modificado en una sola línea
     /** @test */
     public function it_shows_the_options_login_when_logout()
     {
-        Category::factory()->create();
+        $this->createCategory();
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
@@ -30,10 +33,11 @@ class AccountTest extends DuskTestCase
         });
     }
 
+    //Test ya modificado en una sola línea
     /** @test */
     public function it_shows_the_account_options()
     {
-        Category::factory()->create();
+        $this->createCategory();
 
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::factory()->create())

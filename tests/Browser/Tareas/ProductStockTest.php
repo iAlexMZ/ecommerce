@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
@@ -11,7 +11,7 @@ use Tests\DuskTestCase;
 class ProductStockTest extends DuskTestCase
 {
     use DatabaseMigrations;
-    use CreateProduct;
+    use CreateData;
 
     /** @test */
     public function check_that_the_stock_varies_when_adding_a_product_without_color_and_size()

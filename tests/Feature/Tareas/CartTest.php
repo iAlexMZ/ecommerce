@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
 use App\Models\{User, Brand, Image, Product, Category, Subcategory};
@@ -13,8 +13,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CartTest extends TestCase
 {
     use RefreshDatabase;
-    use CreateProduct;
+    use CreateData;
 
+    //Test ya modificado con una única línea
     /** @test */
     public function the_cart_increment_when_add_a_product()
     {
@@ -108,6 +109,7 @@ class CartTest extends TestCase
             ->assertDontSee($product2->name);
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function can_change_the_quantity_in_the_shopping_cart()
     {
@@ -137,6 +139,7 @@ class CartTest extends TestCase
         $this->assertEquals(Cart::subtotal(), $product->price);
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function the_products_can_be_delete_in_the_shopping_cart()
     {
@@ -154,6 +157,7 @@ class CartTest extends TestCase
             ->assertDontSee($product->name);
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function the_cart_can_be_destroy()
     {
@@ -171,56 +175,19 @@ class CartTest extends TestCase
             ->assertDontSee($product->name);
     }
 
+    //Test ya modificado con una única línea
     /** @test */
     public function shopping_cart_is_save_when_logout()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
+        $user = $this->createUser();
         $product = $this->createProduct();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product);
 
+        $content = Cart::content();
         $this->post('/logout');
-
-        $this->assertDatabaseHas('shoppingcart', ['identifier' => $user->id]);
-    }
-
-
-
-
-
-
-
-
-
-    public function createProduct($color = false, $size = false, $quantity = 10)
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
+        $this->actingAs($user);
+        $this->assertDatabaseHas('shoppingcart', ['content' => serialize($content)]);
     }
 }

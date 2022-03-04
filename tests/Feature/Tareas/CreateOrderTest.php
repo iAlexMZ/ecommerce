@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem, CreateOrder};
 use App\Models\{Brand, Image, Product, Category, Subcategory, User};
@@ -14,14 +14,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateOrderTest extends TestCase
 {
     use RefreshDatabase;
-    use CreateProduct;
+    use CreateData;
 
+    //Test modificado en una única línea
     /** @test */
     public function the_cart_is_destroyed_when_the_order_is_created_and_the_user_is_redirect_to_payment_route()
     {
         $product = $this->createProduct();
-
-        $this->actingAs(User::factory()->create());
+        $this->createUser();
 
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product)
@@ -38,6 +38,7 @@ class CreateOrderTest extends TestCase
         $this->assertTrue(count(Cart::content()) == 0);
     }
 
+    //Test modificado en una única línea
     /** @test */
     public function only_logged_user_can_create_a_order()
     {
@@ -52,6 +53,7 @@ class CreateOrderTest extends TestCase
             ->assertStatus(200);
     }
 
+    //Test modificado en una única línea
     /** @test */
     public function a_user_unlogged_cant_create_a_order()
     {
@@ -60,43 +62,5 @@ class CreateOrderTest extends TestCase
         Livewire::test(AddCartItem::class, ['product' => $product])
             ->call('addItem', $product);
         $this->get('/orders/create')->assertStatus(302)->assertRedirect('/login');
-    }
-
-
-
-
-
-
-
-
-
-
-    public function createProduct($color = false, $size = false, $quantity = 10)
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
     }
 }

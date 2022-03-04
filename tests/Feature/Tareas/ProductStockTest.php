@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
-use App\CreateProduct;
+use App\CreateData;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
@@ -10,8 +10,9 @@ use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
 class ProductStockTest extends TestCase
 {
     use RefreshDatabase;
-    use CreateProduct;
+    use CreateData;
 
+    //Test ya modificado en una única línea
     /** @test */
     public function can_see_the_stock_of_product_without_color_and_size()
     {
