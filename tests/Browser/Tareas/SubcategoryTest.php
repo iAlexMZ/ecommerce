@@ -15,28 +15,24 @@ class SubcategoryTest extends DuskTestCase
     /** @test */
     public function it_shows_the_subcategories()
     {
-        $category = Category::factory()->create();
-        $category2 = Category::factory()->create();
-
-        Subcategory::factory()->create([
-            'name' => 'Celulares y smartphones',
-            'category_id'=> $category->id,
+        $subcategory1 = Subcategory::factory()->create([
+            'category_id'=> Category::factory()->create(),
         ]);
 
-        Subcategory::factory()->create([
-            'name' => 'TV y audio',
-            'category_id'=> $category2->id,
+        $subcategory2 = Subcategory::factory()->create([
+            'category_id'=> Category::factory()->create(),
         ]);
 
-        $this->browse(function (Browser $browser) use ($category) {
+        $this->browse(function (Browser $browser) use ($subcategory1, $subcategory2) {
             $browser->visit('/')
                 ->pause(500)
                 ->clickLink('Categorías')
                 ->pause(500)
                 ->mouseover('@categories')
                 ->pause(1000)
-                ->assertSee('Celulares y smartphones')
-                ->assertDontSee('TV y audio');
+                ->assertSee($subcategory1->name)
+                ->assertDontSee($subcategory2->name)
+                ->screenshot('aaa');
         });
     }
 }

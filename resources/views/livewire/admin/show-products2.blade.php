@@ -12,65 +12,89 @@
 
     <x-table-responsive>
         <div class="mt-5 ml-6">
-            <div @click.away="dropdownPagination = false" x-data="{dropdownPagination: false}"
-                class="relative inline-block mb-0">
-                <x-button-link @click="dropdownPagination = !dropdownPagination">
-                    <i class="fa-solid fa-book-open"></i>
-                    <span class="ml-1">Paginación</span>
-                </x-button-link>
-                <select x-show="dropdownPagination" class="w-7/12 absolute left-0 mt-12 bg-gray-100 rounded-md shadow-xl"
-                    wire:model="pagination">
-                    <option value="" selected disabled>Productos a mostrar</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
-
-            <div @click.away="dropdownColumns = false" x-data="{dropdownColumns: false}" class="relative inline-block">
-                <x-button-link @click="dropdownColumns = !dropdownColumns">
-                    <i class="fa-solid fa-table-columns"></i>
-                    <span class="ml-1">Columnas</span>
-                </x-button-link>
-                <div x-show="dropdownColumns" class="absolute left-0 w-40 mt-2 bg-gray-100 rounded-md shadow-xl">
-                    <span href="#" class="block px-4 py-2 text-sm">
-                        @foreach ($columns as $column)
-                            <input type="checkbox" wire:model="selectedColumns" value="{{ $column }}">
-                            <label>{{ $column }}</label>
-                            <br />
-                        @endforeach
-                    </span>
+            <div class="mb-4">
+                <div @click.away="dropdownPagination = false" x-data="{dropdownPagination: false}"
+                    class="relative inline-block mb-0">
+                    <x-button-link @click="dropdownPagination = !dropdownPagination">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span class="ml-1">Paginación</span>
+                    </x-button-link>
+                    <select x-show="dropdownPagination"
+                        class="w-7/12 absolute left-0 mt-12 bg-gray-100 rounded-md shadow-xl" wire:model="pagination">
+                        <option value="" selected disabled>Productos a mostrar</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
                 </div>
+
+                <div @click.away="dropdownColumns = false" x-data="{dropdownColumns: false}"
+                    class="relative inline-block">
+                    <x-button-link @click="dropdownColumns = !dropdownColumns">
+                        <i class="fa-solid fa-table-columns"></i>
+                        <span class="ml-1">Columnas</span>
+                    </x-button-link>
+                    <div x-show="dropdownColumns" class="absolute left-0 w-40 mt-2 bg-gray-100 rounded-md shadow-xl">
+                        <span href="#" class="block px-4 py-2 text-sm">
+                            @foreach ($columns as $column)
+                                <input type="checkbox" wire:model="selectedColumns" value="{{ $column }}">
+                                <label>{{ $column }}</label>
+                                <br />
+                            @endforeach
+                        </span>
+                    </div>
+                </div>
+
+                <div x-data="{dropdownMenu: false}" class="fixed inline-block ml-1">
+                    <x-button-link @click="dropdownMenu = ! dropdownMenu"
+                        class="ml-5 flex items-center p-2 bg-white rounded-md">
+                        <i class="fa-solid fa-filter"></i>
+                        <span class="ml-1">Mostrar Filtros </span>
+                    </x-button-link>
+                    <div x-show="dropdownMenu" class="absolute left-1 py-2 mt-2 bg-white rounded-md shadow-xl">
+                        <aside>
+                            <x-jet-input wire:model="categorySearch" type="text"
+                                placeholder="Busca por categoría" />
+
+                            <x-jet-input wire:model="subcategorySearch" type="text"
+                                placeholder="Busca por subcategoría" />
+
+                            <x-jet-input wire:model="brandSearch" type="text"
+                                placeholder="Busca por marca" />
+
+                            <select wire:model="status" class="form-control w1/3">
+                                <option value="" selected disabled>Seleccionar el estado</option>
+                                <option value="2">Publicado</option>
+                                <option value="1">No Publicado</option>
+                            </select>
+
+                            <x-jet-input wire:model="priceSearch" type="text"
+                                placeholder="Busca por precio" />
+
+                            <input type="checkbox" wire:model="colorsSearch">
+                            <label>Color</label>
+
+                            <input type="checkbox" wire:model="sizesSearch">
+                            <label>Talla</label>
+
+                            <x-jet-button class="mt-4 p-2" wire:click="clearFilters">
+                                <i class="fa-solid fa-eraser mr-1"></i>
+                                Eliminar Filtros
+                            </x-jet-button>
+                        </aside>
+                    </div>
+                </div>
+                <br>
             </div>
 
-           {{--  <aside>
-                <h2 class="font-semibold text-center mb-2">Subcategorías</h2>
-                <ul class="divide-y divide-gray-200">
-                    <li class="py-2 text-sm ">
-                        <a class="cursor-pointer hover:text-orange-500 capitalize"></a>
-                    </li>
-                </ul>
-
-                <h2 class="font-semibold text-center mt-4 mb-2">Marcas</h2>
-                <ul class="divide-y divide-gray-200">
-                    <li class="py-2 text-sm ">
-                        <a class="cursor-pointer hover:text-orange-500 capitalize"></a>
-                    </li>
-                </ul>
-
-                <x-jet-button class="mt-4" wire:click="limpiar">
-                    Eliminar Filtros
-                </x-jet-button>
-            </aside> --}}
-        </div>
-        <div class="px-6 py-4 mt-0">
             <x-jet-input class="w-1/2" wire:model="search" type="text"
                 placeholder="Introduzca el nombre del producto a buscar" />
             <x-button-link wire:click="clear" class="h-10">
                 <span class="fa fa-eraser"></span>
             </x-button-link>
-
+        </div>
+        <div class="px-6 py-4 mt-0">
             @if ($products->count())
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -88,6 +112,9 @@
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Categoría
+                                    <button wire:click="sortable('categories.name')">
+                                        <span class="fa fa{{ $camp === '' ? $icon : '-circle' }}"></span>
+                                    </button>
                                 </th>
                             @endif
                             @if ($this->showColumn('Estado'))

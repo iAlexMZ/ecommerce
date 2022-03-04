@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
+use App\CreateProduct;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem, AddCartItemColor, AddCartItemSize, DropdownCart, Search, ShoppingCart, UpdateCartItem};
 use App\Models\{User, Brand, Image, Product, Category, Subcategory};
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CartTest extends TestCase
 {
     use RefreshDatabase;
+    use CreateProduct;
 
     /** @test */
     public function the_cart_increment_when_add_a_product()
@@ -145,10 +147,10 @@ class CartTest extends TestCase
             ->call('addItem', $product)
             ->assertStatus(200);
 
-        Livewire::test(ShoppingCart::class, ['product' => $product, 'rowId' => Cart::content()->first()->rowId])
+        Livewire::test(ShoppingCart::class, ['product' => $product])
             ->assertViewIs('livewire.shopping-cart')
             ->assertSee($product->name)
-            ->call('delete', 'rowId')
+            ->call('delete', Cart::content()->first()->rowId)
             ->assertDontSee($product->name);
     }
 

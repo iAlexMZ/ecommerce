@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
+use App\CreateProduct;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
@@ -9,6 +10,7 @@ use App\Models\{Brand, Image, Product, Category, Color, Size, Subcategory};
 class ProductStockTest extends TestCase
 {
     use RefreshDatabase;
+    use CreateProduct;
 
     /** @test */
     public function can_see_the_stock_of_product_without_color_and_size()
@@ -44,40 +46,5 @@ class ProductStockTest extends TestCase
 
         $this->get('/products/' . $normalProduct->slug)
             ->assertSee($normalProduct->quantity);
-    }
-
-
-
-
-
-
-
-    public function createProduct($color = false, $size = false, $quantity = 10)
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
     }
 }

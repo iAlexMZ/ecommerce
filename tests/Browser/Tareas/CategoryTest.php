@@ -18,9 +18,7 @@ class CategoryTest extends DuskTestCase
         $brand = Brand::factory()->create();
         $brand2 = Brand::factory()->create();
 
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
+        $category = Category::factory()->create();
 
         $category2 = Category::factory()->create();
 
@@ -28,7 +26,6 @@ class CategoryTest extends DuskTestCase
         $category2->brands()->attach($brand2->id);
 
         $subcategory = Subcategory::factory()->create([
-            'name' => 'Celulares y smartphones',
             'category_id' => $category->id,
         ]);
 
@@ -40,19 +37,11 @@ class CategoryTest extends DuskTestCase
             'subcategory_id' => $subcategory->id,
         ]);
 
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
 
         $product2 = Product::factory()->create([
             'subcategory_id' => $subcategory2->id,
         ]);
 
-        Image::factory()->create([
-            'imageable_id' => $product2->id,
-            'imageable_type' => Product::class,
-        ]);
 
         $this->browse(function (Browser $browser) use ($brand, $category, $subcategory, $product, $brand2, $category2, $subcategory2, $product2) {
             $browser->visit('/')

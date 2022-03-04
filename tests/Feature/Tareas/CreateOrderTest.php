@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
+use App\CreateProduct;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem, CreateOrder};
 use App\Models\{Brand, Image, Product, Category, Subcategory, User};
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateOrderTest extends TestCase
 {
     use RefreshDatabase;
+    use CreateProduct;
 
     /** @test */
     public function the_cart_is_destroyed_when_the_order_is_created_and_the_user_is_redirect_to_payment_route()

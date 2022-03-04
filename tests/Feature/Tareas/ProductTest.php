@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
+use App\CreateProduct;
 use Tests\TestCase;
 use App\Http\Livewire\{AddCartItem};
 use App\Models\{Brand, Image, Product, Category, Subcategory};
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
+    use CreateProduct;
 
    /** @test */
    public function is_not_possible_to_add_more_products_that_the_stock_is_0()
@@ -39,38 +41,4 @@ class ProductTest extends TestCase
            ->assertSeeText('Stock disponible: ' . $product1->quantity)
            ->assertDontSeeText('Stock disponible: ' . $product2->quantity);
    }
-
-
-
-
-
-
-   public function createProduct($color = false, $size = false, $quantity = 10)
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-            'color' => $color,
-            'size' => $size,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-            'quantity' => $quantity,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
-    }
 }

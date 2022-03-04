@@ -4,7 +4,7 @@
     </p>
     <div class="flex">
         <div class="mr-4">
-            <x-jet-secondary-button dusk="button-more" disabled x-bind:disabled="$wire.qty <= 1"
+            <x-jet-secondary-button dusk="button-less" disabled x-bind:disabled="$wire.qty <= 1"
                 wire:loading.attr="disabled" wire:target="decrement" wire:click="decrement">
                 -
             </x-jet-secondary-button>

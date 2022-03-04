@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\ColorSize;
+use App\Models\QueryFilter;
+use App\Models\ColorProduct;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\ColorProduct;
-use App\Models\ColorSize;
 
 
 class Product extends Model
@@ -45,24 +46,60 @@ class Product extends Model
         return $this->morphMany(Image::class, 'imageable');
     }
 
+    public function scopeFilterBy($query, QueryFilter $filters, array $data)
+    {
+        return $filters->applyto($query, $data);
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';
     }
 
-    public function scopeSearch($query, $search)
+    public function scopeCategoryFilter($query, $categorySearch)
     {
-        return $query->where('name', 'LIKE', "%{$search}%")
-            ->orWhereHas('subcategory', function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%")
-                    ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('name', 'LIKE', "%{$search}%");
-                    });
-            })->orWhereHas('colors', function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%");
-            })->orWhereHas('sizes', function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%");
+        return $query->whereHas('subcategory', function (Builder $query) use ($categorySearch) {
+            $query->whereHas('category', function (Builder $query) use ($categorySearch) {
+                $query->where('name', 'LIKE', "%{$categorySearch}%");
             });
+        });
+    }
+
+    public static function scopeSubcategoryFilter($query, $subcategorySearch)
+    {
+        return $query->whereHas('subcategory', function (Builder $query) use ($subcategorySearch) {
+            $query->where('name', 'LIKE', "%{$subcategorySearch}%");
+        });
+    }
+
+    public static function scopeBrandFilter($query, $brandSearch)
+    {
+        return $query->whereHas('brand', function (Builder $query) use ($brandSearch) {
+            $query->where('name', 'LIKE', "%{$brandSearch}%");
+        });
+    }
+
+    public static function scopeStatusFilter($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public static function scopeColorsFilter($query, $colorId)
+    {
+        return $query->whereHas('colors', function ($query) use ($colorId) {
+            $query->where('colors.id', $colorId);
+        })->orWhereHas('sizes', function ($query) use ($colorId) {
+            $query->where(function ($query) use ($colorId) {
+                $query->whereHas('colors', function ($query) use ($colorId) {
+                    $query->where('color_id', $colorId);
+                });
+            });
+        });
+    }
+
+    public static function scopeSizesFilter($query, $sizeId)
+    {
+        return $query->whereHas('sizes');
     }
 
     public function getStockAttribute()

@@ -2,21 +2,21 @@
 
 namespace App\Http\Livewire\Admin;
 
-use App\Models\Color;
 use App\Models\Product;
 use Livewire\Component;
-use Illuminate\Http\Request;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
+use App\Http\Livewire\Admin\ProductQuery;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 
 class ShowProducts2 extends Component
 {
     use WithPagination;
 
-    public $search;
     public $pagination = 15;
     public $columns = ['Nombre', 'Categoría', 'Estado', 'Precio', 'Subcategoría', 'Marca', 'Stock', 'Colores', 'Tallas', 'Fecha Creación', 'Fecha Edición'];
+    public $search, $categorySearch, $subcategorySearch, $brandSearch, $priceSearch, $colorsSearch, $sizesSearch;
+    public $status = 2;
     public $selectedColumns = [];
     public $show = false;
     public $camp = null;
@@ -43,14 +43,24 @@ class ShowProducts2 extends Component
         $this->resetPage();
     }
 
+    public function newEloquentBuilder($query)
+    {
+        return new ProductQuery($query);
+    }
+
     public function clear()
     {
-        $this->search = null;
         $this->pagination = 15;
         $this->order = null;
         $this->camp = null;
         $this->selectedColumns = $this->columns;
         $this->icon = '-circle';
+    }
+
+    public function clearFilters()
+    {
+        $this->reset(['search', 'categorySearch', 'subcategorySearch', 'brandSearch', 'priceSearch', 'colorsSearch', 'sizesSearch', 'status']);
+        $this->resetPage();
     }
 
     public function sortable($camp)
@@ -78,7 +88,23 @@ class ShowProducts2 extends Component
 
     public function render()
     {
-        $products = Product::query()->where('name', 'LIKE', "%{$this->search}%");
+        $products = Product::query()->where('name', 'LIKE', "%{$this->search}%")
+            ->categoryFilter($this->categorySearch)
+            ->subcategoryFilter($this->subcategorySearch)
+            ->brandFilter($this->brandSearch)
+            ->statusFilter($this->status);
+
+        if ($this->colorsSearch) {
+            $products = $products = Product::colorsFilter($this->colorsSearch);
+        }
+
+        if ($this->sizesSearch) {
+            $products = $products = Product::sizesFilter($this->sizesSearch);
+        }
+
+        if ($this->priceSearch) {
+            $products = $products = $products->where('price', 'LIKE', "%{$this->priceSearch}%");
+        }
 
         if ($this->camp && $this->order) {
             $products = $products->orderBy($this->camp, $this->order);

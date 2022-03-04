@@ -22,7 +22,7 @@ class AccountTest extends DuskTestCase
             $browser->visit('/')
                 ->pause(500)
                 ->assertSee('Categorías')
-                ->click('i')
+                ->click('@unlogged-image')
                 ->pause(500)
                 ->assertSee('Iniciar sesión')
                 ->assertSee('Registrarse')

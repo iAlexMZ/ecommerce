@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Tareas;
 
+use App\CreateProduct;
 use App\Http\Livewire\AddCartItem;
 use App\Http\Livewire\CreateOrder;
 use Tests\TestCase;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class AuthorizedUserTest extends TestCase
 {
     use RefreshDatabase;
+    use CreateProduct;
 
     /** @test */
     public function an_unlogged_user_cant_access_to_admin_view()
@@ -47,33 +49,5 @@ class AuthorizedUserTest extends TestCase
             ->call('create_order');
 
         $this->actingAs(User::factory()->create(['id' => 2]))->get('/orders/1/payment')->assertStatus(403);
-    }
-
-
-
-    public function createProduct()
-    {
-        $brand = Brand::factory()->create();
-
-        $category = Category::factory()->create([
-            'name' => 'Celulares y tablets',
-        ]);
-
-        $category->brands()->attach($brand->id);
-
-        $subcategory = Subcategory::factory()->create([
-            'category_id' => $category->id,
-        ]);
-
-        $product = Product::factory()->create([
-            'subcategory_id' => $subcategory->id,
-        ]);
-
-        Image::factory()->create([
-            'imageable_id' => $product->id,
-            'imageable_type' => Product::class,
-        ]);
-
-        return $product;
     }
 }
